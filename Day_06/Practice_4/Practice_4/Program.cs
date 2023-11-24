@@ -1,4 +1,4 @@
-﻿Console.WriteLine($"Aritmethic average of arrya is: {Average(CreateArray())}");
+﻿Console.WriteLine($"Aritmethic average of array is: {Average(CreateArray())}");
 Console.Read();
 
 int[] CreateArray()
@@ -14,6 +14,7 @@ int[] CreateArray()
     }
     return array;
 }
+
 double Average(int[] array)
 {
     double count = 0;
@@ -21,6 +22,5 @@ double Average(int[] array)
     {
         count += array[i];
     }
-
     return (int)(count / array.Length*100)/100.0; 
 }
