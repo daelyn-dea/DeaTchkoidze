@@ -14,13 +14,13 @@ int[] CreateArray()
     }
     return array;
 }
-int Average(int[] array)
+double Average(int[] array)
 {
-    int count = 0;
+    double count = 0;
     for(int i = 0; i < array.Length; i++)
     {
         count += array[i];
     }
 
-    return count / array.Length; ;
+    return (int)(count / array.Length*100)/100.0; 
 }
