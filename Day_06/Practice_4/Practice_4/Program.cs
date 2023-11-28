@@ -1,6 +1,6 @@
 ﻿Console.WriteLine($"Aritmethic average of array is: {Average(CreateArray())}");
 Console.Read();
-
+ 
 int[] CreateArray()
 {
     Console.Write("Enter array size: ");
