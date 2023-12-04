@@ -47,7 +47,7 @@ namespace Clock
             }
             set
             {
-                if (value >= 0 && value <= 24)
+                if (value >= 0 && value <= 23)
                 {
                     Hour = value;
                 }
