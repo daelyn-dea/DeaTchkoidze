@@ -3,11 +3,11 @@ namespace _Triangle
 {
     internal class Triangle
     {
-        int _Side1;
-        int _Side2;
-        int _Side3;
+        double _Side1;
+        double _Side2;
+        double _Side3;
 
-        public int Side1
+        public double Side1
         {
             get
             {
@@ -21,7 +21,7 @@ namespace _Triangle
                 }
             }
         }
-        public int Side2
+        public double Side2
         {
             get
             {
@@ -35,7 +35,7 @@ namespace _Triangle
                 }
             }
         }
-        public int Side3
+        public double Side3
         {
             get
             {
@@ -43,28 +43,32 @@ namespace _Triangle
             }
             set
             {
-                if (value > 0)
+                if (value > 0 && _Side1 + _Side2 > value && _Side1 + value > _Side2 && _Side2 + value > _Side1)
                 {
                     _Side3 = value;
                 }
+                else
+                {
+                    Console.WriteLine("It isn't valid Triangle");
+                }
             }
         }
-        public double CalculateArea()
+        public void CalculateArea()
         {
-            double s = (_Side1 + _Side2 + _Side3) / 2;
-            return Math.Sqrt(s * (s - _Side1) * (s - _Side2) * (s - _Side3));
-        }
-        public double CalculatePerimeter()
-        {
-            return Side1 + Side2 + Side3;
-        }
-        public bool ValidateTriangle()
-        {
-            if(_Side1+_Side2>_Side3 && _Side1+_Side3>_Side2 && _Side2 + _Side3 > _Side1)
+            if (_Side1 + _Side2 > _Side3 && _Side1 + _Side3 > _Side2 && _Side2 + _Side3 > _Side1)
             {
-                return true;
+                double s = (_Side1 + _Side2 + _Side3) / 2;
+                double area = Math.Sqrt(s * (s - _Side1) * (s - _Side2) * (s - _Side3));
+                Console.WriteLine($"Area of the triangle is: {area}");
             }
-            return false;
+        }
+        public void CalculatePerimeter()
+        {
+            if (_Side1 + _Side2 > _Side3 && _Side1 + _Side3 > _Side2 && _Side2 + _Side3 > _Side1)
+            {
+                double perimeter = Side1 + Side2 + Side3;
+                Console.WriteLine($"Perimeter of the triangle is: {perimeter}");
+            }
         }
     }
 }
