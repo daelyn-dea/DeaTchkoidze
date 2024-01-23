@@ -1,0 +1,7 @@
+Paris|105,4|2161000|true|France
+Kutaisi|67,7|147500|false|Georgia
+London|157,2|8982000|true|England
+Grenoble|18,13|160689|false|France
+Liverpool|111,8|486784|false|England
+Tbilisi|726|1114000|true|Georgia
+

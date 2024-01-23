@@ -1,0 +1,10 @@
+1.question|bla|blu|ble|bla*
+d|d|d|d*|d
+
+Dea|ki|ki|ki|ki*
+
+da|da|da|da|da*
+
+da|da|da|da|da
+
+ad|ad|ad|ad|ad

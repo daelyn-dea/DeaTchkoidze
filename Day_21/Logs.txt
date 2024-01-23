@@ -1,0 +1,3 @@
+1/8/2024 6:08:06 PM: Exception of type 'System.Exception' was thrown.: StackTrace:    at Day_21.TestCreating.IsEveryAnswerDifferent() in C:\Users\dchko\Desktop\visual studio\.NET\Day_21\Day_21\Day_21\TestCreating.cs:line 50
+   at Day_21.WriteTestInFile.CallCreateTest() in C:\Users\dchko\Desktop\visual studio\.NET\Day_21\Day_21\Day_21\WriteTestInFile.cs:line 16
+   at Program.<Main>$(String[] args) in C:\Users\dchko\Desktop\visual studio\.NET\Day_21\Day_21\Day_21\Program.cs:line 13
