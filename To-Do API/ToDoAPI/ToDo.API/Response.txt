@@ -1,0 +1,144 @@
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 3:32:43 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 3:39:25 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 3:39:50 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 3:43:11 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 3:44:09 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 3:44:25 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 3:48:54 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 4:00:46 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 4:01:16 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 4:02:30 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 4:02:37 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 4:02:39 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 4:02:43 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 4:04:22 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 4:05:03 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 4:05:40 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 4:07:46 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 6:07:48 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 6:08:23 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 6:09:53 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 6:12:18 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 6:15:25 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 6:15:45 PM
+
+Logged from Middleware 
+Status code: 200
+Headers: 
+Body: Microsoft.AspNetCore.Server.IIS.Core.HttpResponseStream
+Time: 3/25/2024 6:16:07 PM
