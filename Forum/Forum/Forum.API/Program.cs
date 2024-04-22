@@ -1,7 +1,6 @@
 using Forum.API.Infrastructure.Extensions;
 using Forum.API.Infrastructure.MiddleWares.ErrorHandling;
 using HealthChecks.UI.Client;
-using HealthChecks.UI.Configuration;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 

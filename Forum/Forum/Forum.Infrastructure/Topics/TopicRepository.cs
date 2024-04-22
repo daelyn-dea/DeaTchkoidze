@@ -5,7 +5,7 @@ using Forum.Application.Topics;
 using Forum.Application.Topics.ResponseModels;
 using Forum.Domain.Comments;
 using Forum.Domain.Topics;
-using Forum.Infrastructures;
+using Forum.Infrastructure.BaseRepository;
 using Forum.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -150,22 +150,24 @@ namespace Forum.Infrastructure.Topics
             return await _context.Topic.AnyAsync(x => x.UserId == userId, cancellationToken).ConfigureAwait(false);
         }
 
-        public void InactivateTopic()
+        public async Task InactivateTopic(CancellationToken cancellationToken)
         {
             var currentTime = DateTime.Now;
             var twoDaysAgo = currentTime.AddDays(-2);
 
             var inactiveTopics = _context.Topic
-                .Where(t => t.CreatedAt < twoDaysAgo)
-                .Where(t => t.Comments == null || (!t.Comments.Any() || t.Comments.OrderByDescending(c => c.CreatedAt).First().CreatedAt < twoDaysAgo))
-                .ToList();
+                   .Where(t => t.CreatedAt < twoDaysAgo)
+                   .Where(t => !t.Comments!.Any() ||
+                   t.Comments!.Any() &&
+                   t.Comments!.OrderByDescending(c => c.CreatedAt)
+                   .First().CreatedAt < twoDaysAgo);
 
             foreach (var topic in inactiveTopics)
             {
                 topic.Status = TopicStatusEnum.TopicStatus.Inactive;
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

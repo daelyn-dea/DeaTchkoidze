@@ -18,6 +18,6 @@ namespace Forum.Application.Topics
         Task<bool> ExistsTopic(int id, CancellationToken cancellationToken);
         Task<bool> CanDelete(int id, string userId, CancellationToken cancellationToken);
         Task UpdateAsync(Topic topic, CancellationToken cancellationToken);
-        void InactivateTopic();
+        Task InactivateTopic(CancellationToken cancellationToken);
     }
 }

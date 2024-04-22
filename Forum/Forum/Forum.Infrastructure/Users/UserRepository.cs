@@ -1,13 +1,12 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using Forum.Application.Exceptions;
 using Forum.Application.Helpers;
 using Forum.Application.Topics.ResponseModels;
 using Forum.Application.Users;
 using Forum.Application.Users.Models.ResponseModels;
 using Forum.Domain.Topics;
 using Forum.Domain.Users;
-using Forum.Infrastructures;
+using Forum.Infrastructure.BaseRepository;
 using Forum.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -129,16 +128,18 @@ namespace Forum.Infrastructure.Users
         {
             var expirationTime = _configuration.GetValue<int>("BlockedTime");
             var currentTime = DateTime.Now;
+            var expirationThreshold = currentTime - TimeSpan.FromDays(expirationTime);
 
             var expiredUsers = _context.User
-                .Where(x => x.IsBlocked && (currentTime - x.BlockedTime) >= TimeSpan.FromDays(expirationTime));
+                .Where(x => x.IsBlocked && x.BlockedTime <= expirationThreshold);
 
             foreach (var user in expiredUsers)
             {
                 user.IsBlocked = false;
                 user.BlockedTime = null;
-                await UpdateAsync(user, cancellationToken).ConfigureAwait(false);
             }
+
+            await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

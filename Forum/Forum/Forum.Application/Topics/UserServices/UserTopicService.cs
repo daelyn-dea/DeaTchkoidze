@@ -94,12 +94,6 @@ public class UserTopicService : IUserTopicService
         }
         return intIds[0];
     }
-
-    public void InactivateTopic()
-    {
-        _topicRepository.InactivateTopic();
-    }
-
     public async Task<bool> CanDelete(int id, string userId, CancellationToken cancellationToken)
     {
         return await _topicRepository.CanDelete(id, userId, cancellationToken).ConfigureAwait(false);

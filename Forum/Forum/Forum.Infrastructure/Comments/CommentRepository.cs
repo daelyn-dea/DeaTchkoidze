@@ -2,7 +2,7 @@
 
 using Forum.Application.Comments;
 using Forum.Domain.Comments;
-using Forum.Infrastructures;
+using Forum.Infrastructure.BaseRepository;
 using Forum.Persistence.Context;
 
 namespace Forum.Infrastructure.Comments

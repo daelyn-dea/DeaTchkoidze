@@ -3,9 +3,9 @@ using Forum.Domain;
 using Forum.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.Infrastructures
+namespace Forum.Infrastructure.BaseRepository
 {
-    public class BaseRepository<T> where T : class, IBaseEntity
+    public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
     {
         protected readonly ForumContext _context = default!;
 
@@ -44,7 +44,7 @@ namespace Forum.Infrastructures
             await _context.SaveChangesAsync(token).ConfigureAwait(false);
         }
 
-        public Task<bool> AnyAsync( Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
+        public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
         {
             return _dbSet.AnyAsync(predicate, cancellationToken);
         }
