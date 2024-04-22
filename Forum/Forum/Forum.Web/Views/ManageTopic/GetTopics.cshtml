@@ -1,0 +1,120 @@
+﻿@using Forum.Application.Helpers;
+@using System.Security.Policy;
+@using Forum.Domain.Topics;
+@using static Forum.Domain.Topics.TopicStateEnum;
+@using static Forum.Domain.Topics.TopicStatusEnum;
+@using static Forum.Application.Topics.ResponseModels.TopicResponseStateEnum;
+@model PagedList<Forum.Application.Topics.ResponseModels.AdminTopicDetailsModel>
+
+@{
+	ViewData["Title"] = "IndexAdmin";
+}
+
+<head>
+	<link rel="stylesheet" href="~/css/custom-styles.css" />
+</head>
+
+<div class="container mt-4 mb-4 d-flex justify-content-center">
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>User Name</th>
+					<th>Title</th>
+					<th>Created At</th>
+					<th>Comments</th>
+					<th>Status</th>
+					<th>State</th>
+					<th>Change Status</th>
+					<th>Change State</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var topic in Model.Items)
+				{
+					<tr>
+						<td><a href="@Url.Action("GetUserByName", "User", new { userName = topic.UserName })" class="topic-username">@topic.UserName</a></td>
+						<td>@topic.Title</td>
+						<td>@topic.CreatedAt</td>
+						<td>
+							@if (topic.State != DbTopicState.Pending)
+							{
+								<a href="@Url.Action("GetTopicById", "ManageTopic", new { id = topic.Id })">@topic.TopicsCommentCount</a>
+							}
+							else
+							{
+								@topic.TopicsCommentCount
+							}
+						</td>
+						<td>@topic.Status</td>
+						<td>@topic.State</td>
+						<td>
+							@if (topic.Status == TopicStatus.Active)
+							{
+								@Html.ActionLink("InActive", "ChangeStatus", "ManageTopic", new { topicId = topic.Id, status = TopicStatus.Inactive}, null)
+							}
+							else
+							{
+								@Html.ActionLink("Active", "ChangeStatus", "ManageTopic", new { topicId = topic.Id, status = TopicStatus.Active}, null)
+							}
+						</td>
+						<td>
+								@if (topic.State == DbTopicState.Show)
+								{
+									@Html.ActionLink("Hide", "ChangeState", "ManageTopic", new { topicId = topic.Id, state = TopicState.Hide}, null)
+								}
+								else
+								{
+									@Html.ActionLink("Show", "ChangeState", "ManageTopic", new { topicId = topic.Id, state = TopicState.Show}, null)
+								}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="container mt-4 mb-4 d-flex justify-content-center">
+	<div class="pagination">
+		<div class="pagination-info">
+			<span>Page @Model.CurrentPage of @Model.TotalPages</span>
+		</div>
+
+		<div class="pagination-links">
+			@if (Model.HasPreviousPage)
+			{
+				<a href="@Url.Action("GetTopics", new { pageNumber = 1, pageSize = Model.PageSize })" class="page-link">First</a>
+				<a href="@Url.Action("GetTopics", new { pageNumber = Model.CurrentPage - 1, pageSize = Model.PageSize })" class="page-link">Previous</a>
+			}
+			else
+			{
+				<span class="disabled">First</span>
+				<span class="disabled">Previous</span>
+			}
+
+			@for (int i = 1; i <= Model.TotalPages; i++)
+			{
+				if (i == Model.CurrentPage)
+				{
+					<span class="current-page">@i</span>
+				}
+				else
+				{
+					<a href="@Url.Action("GetTopics", new { pageNumber = i, pageSize = Model.PageSize })" class="page-link">@i</a>
+				}
+			}
+
+			@if (Model.HasNextPage)
+			{
+				<a href="@Url.Action("GetTopics", new { pageNumber = Model.CurrentPage + 1, pageSize = Model.PageSize })" class="page-link">Next</a>
+				<a href="@Url.Action("GetTopics", new { pageNumber = Model.TotalPages, pageSize = Model.PageSize })" class="page-link">Last</a>
+			}
+			else
+			{
+				<span class="disabled">Next</span>
+				<span class="disabled">Last</span>
+			}
+		</div>
+	</div>
+</div>
