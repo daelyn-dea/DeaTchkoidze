@@ -9,11 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Forum.Application.Topics.UserServices;
 using Forum.Application.Comments.Services;
 using Forum.Application.Topics.AdminServices;
-using Forum.Application.Authentications.AbstractionOfAuthenticationServices;
-using Forum.Application.Authentications.AuthenticationServices;
 using Forum.Application.Users.UserServices;
 using Forum.Application.Users.AdminServices;
 using Forum.Application.Mappings;
+using Forum.Application.Authentications;
 
 namespace Forum.Application.ServiceExtensions
 {
@@ -27,7 +26,6 @@ namespace Forum.Application.ServiceExtensions
                 .AddDefaultTokenProviders();
 
             services.AddScoped<IUserManagementService, UserManagementService>();
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.AddScoped<IUserTopicService, UserTopicService>();
             services.AddScoped<IAdminTopicService, AdminTopicService>();

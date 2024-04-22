@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Forum.API.Infrastructure.Authentication;
-using Forum.Application.Exceptions;
-using Forum.Application.Authentications.AbstractionOfAuthenticationServices;
 using Forum.Application.Authentications.RequestModels;
+using Forum.Application.Authentications;
 
 namespace Forum.API.Controllers
 {

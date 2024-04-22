@@ -1,6 +1,6 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using Forum.Application.Authentications.AbstractionOfAuthenticationServices;
+using Forum.Application.Authentications;
 using Forum.Application.Authentications.RequestModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +9,9 @@ namespace Forum.Web.Controllers
     public class AccountController : Controller
     {
         private readonly IUserManagementService _userManagementService;
-        private readonly IAuthenticationService _authenticationService;
-        public AccountController(IUserManagementService userManagementService,IAuthenticationService authenticationService)
+        public AccountController(IUserManagementService userManagementService)
         {
             _userManagementService = userManagementService;
-            _authenticationService = authenticationService;
         }
         public IActionResult Login()
         {
@@ -27,7 +25,7 @@ namespace Forum.Web.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-            var result = await _authenticationService.PasswordSignInAsync(model.Username, model.Password, false, false).ConfigureAwait(false);
+            var result = await _userManagementService.PasswordSignInAsync(model.Username, model.Password, false, false).ConfigureAwait(false);
 
             if (result.Succeeded)
             {
@@ -62,7 +60,7 @@ namespace Forum.Web.Controllers
         }
         public async Task<IActionResult> Logout()
         {
-            await _authenticationService.SignOutAsync().ConfigureAwait(false);
+            await _userManagementService.SignOutAsync().ConfigureAwait(false);
 
             return RedirectToAction("Index", "Home");
         }

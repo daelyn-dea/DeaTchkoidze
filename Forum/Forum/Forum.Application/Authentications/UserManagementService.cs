@@ -2,11 +2,10 @@
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Forum.Application.Exceptions;
-using Forum.Application.Authentications.AbstractionOfAuthenticationServices;
 using Forum.Application.Authentications.RequestModels;
 using Forum.Application.Authentications.ResponseModel;
 
-namespace Forum.Application.Authentications.AuthenticationServices
+namespace Forum.Application.Authentications
 {
     public class UserManagementService : IUserManagementService
     {
@@ -75,6 +74,24 @@ namespace Forum.Application.Authentications.AuthenticationServices
             var result = new ResponseLoginModel() { Id = user.Id, Username = user.UserName, Role = role };
 
             return result;
+        }
+        public async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isPersistent, bool lockoutOnFailure)
+        {
+            var user = await _userManager.FindByNameAsync(userName).ConfigureAwait(false);
+
+            if (user == null)
+                throw new InvalidCredentialsException();
+
+            if (user.IsBlocked)
+                throw new UserIsBlockedException();
+
+            var ku = await _signInManager.PasswordSignInAsync(userName, password, isPersistent, lockoutOnFailure).ConfigureAwait(false);
+            return ku;
+        }
+
+        public async Task SignOutAsync()
+        {
+            await _signInManager.SignOutAsync().ConfigureAwait(false);
         }
     }
 }
