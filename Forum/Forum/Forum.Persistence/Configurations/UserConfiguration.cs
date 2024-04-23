@@ -10,13 +10,19 @@ namespace Forum.Persistence.Configurations
 		{
 			builder.HasIndex(user => user.UserName).IsUnique();
 
-			builder.HasIndex(user => user.Email).IsUnique(); //for search
+            builder.HasIndex(user => user.Email).IsUnique();
 
 			builder.Property(user => user.Email).HasMaxLength(100).IsRequired();
 
-			builder.Property(user => user.UserName).IsRequired().HasMaxLength(50);
+            builder.Property(user => user.NormalizedEmail).IsRequired().HasMaxLength(100);
 
-			builder.Property(user => user.PasswordHash).IsRequired();
+            builder.Property(user => user.UserName).IsRequired().HasMaxLength(50);
+
+            builder.Property(user => user.NormalizedUserName).IsRequired().HasMaxLength(50);
+
+            builder.Property(user => user.Id).IsRequired().HasMaxLength(100);
+
+            builder.Property(user => user.PasswordHash).IsRequired();
 
 			builder.Property(user => user.Name).HasMaxLength(50);
 

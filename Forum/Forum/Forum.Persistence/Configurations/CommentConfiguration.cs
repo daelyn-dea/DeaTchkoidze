@@ -8,9 +8,9 @@ namespace Forum.Persistence.Configurations
 	{
 		public void Configure(EntityTypeBuilder<Comment> builder)
 		{
-			builder.Property(comment => comment.Title).IsRequired().HasMaxLength(200);
+			builder.Property(comment => comment.Title).IsRequired().HasMaxLength(400);
 
-			builder.Property(comment => comment.UserId).IsRequired();
+            builder.Property(comment => comment.UserId).IsRequired().HasMaxLength(30);
 
 			builder.Property(comment => comment.TopicId).IsRequired();
 

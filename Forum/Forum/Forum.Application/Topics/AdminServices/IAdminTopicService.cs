@@ -1,6 +1,6 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using Forum.Application.Helpers;
+using Forum.Application.Infrastructure.Helpers;
 using Forum.Application.Topics.ResponseModels;
 using static Forum.Application.Topics.ResponseModels.TopicResponseStateEnum;
 using static Forum.Domain.Topics.TopicStatusEnum;

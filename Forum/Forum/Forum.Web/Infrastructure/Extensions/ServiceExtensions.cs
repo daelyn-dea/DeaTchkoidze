@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Forum.Application.ServiceExtensions;
 using Forum.Persistence.PersistenceExtensions;
 using Forum.Infrastructure.InfrastructureExtensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Forum.Application.Infrastructure.ServiceExtensions;
 
 namespace Forum.Web.Infrastructure.Extensions
 {

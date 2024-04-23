@@ -1,5 +1,6 @@
-﻿@using Forum.Application.Helpers;
+﻿@using Forum.Application.Infrastructure.Helpers;
 @using System.Security.Claims;
+
 @model PagedList<Forum.Application.Topics.ResponseModels.UserTopicDetailsModel>
 
 @{
@@ -29,7 +30,7 @@
 							<input type="file" name="image" class="form-control" accept="image/*" />
 						</div>
 
-						<button type="submit" class="btn btn-light">Add Topic</button>
+						<button type="submit" class="btn btn-primary btn-lg">Add Topic</button>
 					</form>
 				}
 				@foreach (var topic in Model.Items)

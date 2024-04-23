@@ -13,11 +13,10 @@ namespace Forum.Persistence.Context
 		public ForumContext(DbContextOptions<ForumContext> options) : base(options)
 		{
 		}
-        public DbSet<User> User { get; set; } = default!;
         public DbSet<Comment> Comment { get; set; } = default!;
 		public DbSet<Topic> Topic { get; set; } = default!;
-
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public DbSet<User> User { get; set; } = default!;
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 

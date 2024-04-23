@@ -2,7 +2,7 @@
 
 using System.Security.Claims;
 using Forum.Application.Comments.RequestModels;
-using Forum.Application.Exceptions;
+using Forum.Application.Infrastructure.Exceptions;
 using Forum.Application.Topics.UserServices;
 using Forum.Domain.Comments;
 using Mapster;
@@ -20,8 +20,14 @@ namespace Forum.Application.Comments.Services
             _topicService = topicService;
         }
 
-        public async Task CreateCommentAsync(CommentRequestModel commentRequestModel, string userId, CancellationToken cancellationToken)
+        public async Task CreateCommentAsync(CommentRequestModel commentRequestModel, ClaimsPrincipal user, CancellationToken cancellationToken)
         {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                throw new UserNotFoundException();
+            }
+
             var comment = commentRequestModel.Adapt<Comment>();
 
             var topicExists = await _topicService.ExistsTopic(comment.TopicId, cancellationToken).ConfigureAwait(false);

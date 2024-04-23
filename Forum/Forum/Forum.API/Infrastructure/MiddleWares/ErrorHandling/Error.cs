@@ -1,7 +1,7 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
 using System.Net;
-using Forum.Application.Exceptions;
+using Forum.Application.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.API.Infrastructure.MiddleWares.ErrorHandling

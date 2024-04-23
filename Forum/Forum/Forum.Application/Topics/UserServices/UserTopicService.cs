@@ -1,25 +1,25 @@
-﻿using Forum.Application.Exceptions;
+﻿using Forum.Application.Infrastructure.Exceptions;
 using Forum.Application.Topics.RequestModels;
 using Forum.Application.Topics.ResponseModels;
 using Forum.Application.Topics.UserServices;
-using Forum.Application.Topics;
 using Forum.Domain.Topics;
 using HashidsNet;
 using Microsoft.Extensions.Configuration;
 using Mapster;
-using Forum.Application.Helpers;
 using Forum.Application.Images;
 using Forum.Application.Users.UserServices;
+using Forum.Application.Topics.Interfaces;
+using Forum.Application.Infrastructure.Helpers;
 
 public class UserTopicService : IUserTopicService
 {
-    private readonly ITopicRepository _topicRepository;
+    private readonly IUserTopicRepository _topicRepository;
     private readonly IHashids _hashIds;
     private readonly IConfiguration _configuration;
     private readonly IImagesRepository _imagesRepository;
     private readonly IUserService _userService;
 
-    public UserTopicService(ITopicRepository topicRepository, IHashids hashIds, IConfiguration configuration, IImagesRepository imagesRepository, IUserService userService)
+    public UserTopicService(IUserTopicRepository topicRepository, IHashids hashIds, IConfiguration configuration, IImagesRepository imagesRepository, IUserService userService)
     {
         _topicRepository = topicRepository;
         _hashIds = hashIds;
@@ -31,11 +31,21 @@ public class UserTopicService : IUserTopicService
     public async Task<PagedList<UserTopicDetailsModel>> GetAllTopicsAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
         var topics = await _topicRepository
-            .GetAllTopicsForUserAsync(pageNumber, pageSize, cancellationToken)
+            .GetAllTopicsAsync(pageNumber, pageSize, cancellationToken)
             .ConfigureAwait(false);
 
-        return topics.Adapt<PagedList<UserTopicDetailsModel>>(); ;
+        return topics.Adapt<PagedList<UserTopicDetailsModel>>();
+    }
 
+    public async Task<PagedList<ImagedTopicModel>> GetTopicAsync(int pageNumber, int pageSize, string id, CancellationToken cancellationToken)
+    {
+        var topicId = DecodeAndValidateTopicId(id);
+
+        var topicForResponse = await _topicRepository
+            .GetTopicAsync(pageNumber, pageSize, topicId, cancellationToken)
+            .ConfigureAwait(false);
+
+        return topicForResponse!.Adapt<PagedList<ImagedTopicModel>>();
     }
 
     public async Task CreateTopicAsync(TopicRequestModel topic, string id, CancellationToken cancellationToken)
@@ -57,8 +67,7 @@ public class UserTopicService : IUserTopicService
             var requestPath = _configuration.GetValue<string>("TopicImagesConfiguration:RequestPath");
 
             string imageName, imageUrl;
-
-            ImageFileHelper.GenerateUrl(topic.Image.FileName, savePath, out imageName, out imageUrl);
+            ImageFileHelper.GenerateUrl(topic.Image!.FileName, savePath, out imageName, out imageUrl);
 
             await _imagesRepository.SaveImageAsync(topic.Image, savePath, imageUrl, cancellationToken).ConfigureAwait(false);
 
@@ -68,18 +77,6 @@ public class UserTopicService : IUserTopicService
         await _topicRepository.CreateTopicAsync(dbTopic, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<PagedList<ImagedTopicModel>> GetTopicAsync(int pageNumber, int pageSize, string id, CancellationToken cancellationToken)
-    {
-        var topicId = DecodeAndValidateTopicId(id);
-        var topicForResponse = await _topicRepository.GetTopicAsync(pageNumber, pageSize, topicId, cancellationToken).ConfigureAwait(false);
-
-        if (topicForResponse == null)
-            throw new TopicNotFoundException();
-
-        var topicResponseModelForUser = topicForResponse!.Adapt<PagedList<ImagedTopicModel>>();
-
-        return topicResponseModelForUser;
-    }
     public async Task<bool> ExistsTopic(int id, CancellationToken cancellationToken)
     {
         return await _topicRepository.ExistsTopic(id, cancellationToken).ConfigureAwait(false);
@@ -94,6 +91,7 @@ public class UserTopicService : IUserTopicService
         }
         return intIds[0];
     }
+
     public async Task<bool> CanDelete(int id, string userId, CancellationToken cancellationToken)
     {
         return await _topicRepository.CanDelete(id, userId, cancellationToken).ConfigureAwait(false);

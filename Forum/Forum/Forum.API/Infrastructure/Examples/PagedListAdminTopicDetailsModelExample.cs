@@ -1,6 +1,6 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using Forum.Application.Helpers;
+using Forum.Application.Infrastructure.Helpers;
 using Forum.Application.Topics.ResponseModels;
 using Forum.Domain.Topics;
 using Swashbuckle.AspNetCore.Filters;

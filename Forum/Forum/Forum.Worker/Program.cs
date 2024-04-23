@@ -1,5 +1,5 @@
-﻿using Forum.Application.Topics;
-using Forum.Application.Users;
+﻿using Forum.Application.Topics.Interfaces;
+using Forum.Application.Users.Interfaces;
 using Forum.Infrastructure.BaseRepository;
 using Forum.Infrastructure.Topics;
 using Forum.Infrastructure.Users;
@@ -37,7 +37,7 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             services.AddDbContext<ForumContext>(options => options.UseSqlServer(hostContext.Configuration.GetConnectionString("DefaultConnection")),ServiceLifetime.Transient);
             services.AddSingleton(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddSingleton<IUserRepository, UserRepository>();
-            services.AddSingleton<ITopicRepository, TopicRepository>();
+            services.AddSingleton<IUserTopicRepository, UserTopicRepository>();
             services.AddHostedService<TopicArchiveWorker>();
             services.AddHostedService<BlockRemovalWorker>();
         });

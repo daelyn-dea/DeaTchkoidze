@@ -2,8 +2,8 @@
 
 using Forum.Application.Comments;
 using Forum.Application.Images;
-using Forum.Application.Topics;
-using Forum.Application.Users;
+using Forum.Application.Topics.Interfaces;
+using Forum.Application.Users.Interfaces;
 using Forum.Infrastructure.Comments;
 using Forum.Infrastructure.Images;
 using Forum.Infrastructure.Topics;
@@ -17,7 +17,9 @@ namespace Forum.Infrastructure.InfrastructureExtensions
         public static void AddInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ITopicRepository, TopicRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddScoped<IUserTopicRepository, UserTopicRepository>();
+            services.AddScoped<IAdminTopicRepository, AdminTopicRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IImagesRepository, ImagesRepository>();
         }

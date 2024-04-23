@@ -27,7 +27,11 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
-	app.UseSwaggerUI();
+    app.UseSwaggerUI(opts =>
+    {
+        opts.SwaggerEndpoint("/swagger/v2/swagger.json", "2.0");
+        opts.SwaggerEndpoint("/swagger/v1/swagger.json", "1.0");
+    });
 }
 
 app.UseHttpsRedirection();

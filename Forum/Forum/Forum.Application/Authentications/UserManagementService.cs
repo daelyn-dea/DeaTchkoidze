@@ -1,9 +1,9 @@
 ﻿using Forum.Domain.Users;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
-using Forum.Application.Exceptions;
 using Forum.Application.Authentications.RequestModels;
 using Forum.Application.Authentications.ResponseModel;
+using Forum.Application.Infrastructure.Exceptions;
 
 namespace Forum.Application.Authentications
 {
@@ -29,7 +29,7 @@ namespace Forum.Application.Authentications
                 throw new UserNameAlreadyExistsException();
 
             var createUser = registerUser.Adapt<User>();
-            createUser.ImageUrl = "Default";
+            createUser.ImageUrl = "/UserImages/Default.jpg";
 
             var result = await _userManager.CreateAsync(createUser, registerUser.Password).ConfigureAwait(false);
 

@@ -2,7 +2,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Forum.API.Infrastructure.Authentication;
-using Forum.Application.ServiceExtensions;
+using Forum.Application.Infrastructure.ServiceExtensions;
 using Forum.Infrastructure.InfrastructureExtensions;
 using Forum.Persistence.PersistenceExtensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -13,6 +13,25 @@ namespace Forum.API.Infrastructure.Extensions
     {
         public static void AddServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHealthChecks(configuration);
+
+            services.AddApplication(configuration);
+            services.AddPersistence(configuration);
+            services.AddInfrastructure();
+
+            services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+            services.Configure<AuthenticationConfiguration>(configuration.GetSection(nameof(AuthenticationConfiguration)));
+            services.AddTokenAuthentication(configuration);
+
+        }
+        public static void AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
+        {
+            var userImagesSavePath = configuration.GetSection("UserImagesConfiguration")["SavePath"];
+            var topicImagesSavePath = configuration.GetSection("TopicImagesConfiguration")["SavePath"];
+
+
             services.AddHealthChecks()
                     .AddSqlServer(configuration["ConnectionStrings:DefaultConnection"], healthQuery: "select 1", name: "SQL Server", failureStatus: HealthStatus.Unhealthy, tags: new[] { "Feedback", "Database" })
                     .AddUrlGroup(new Uri("https://localhost:7257/swagger/index.html"), name: "base URL", failureStatus: HealthStatus.Unhealthy);
@@ -26,17 +45,6 @@ namespace Forum.API.Infrastructure.Extensions
 
             })
                 .AddInMemoryStorage();
-
-            services.AddApplication(configuration);
-            services.AddPersistence(configuration);
-            services.AddInfrastructure();
-
-            services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
-            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-            services.Configure<AuthenticationConfiguration>(configuration.GetSection(nameof(AuthenticationConfiguration)));
-            services.AddTokenAuthentication(configuration);
-
         }
     }
 }

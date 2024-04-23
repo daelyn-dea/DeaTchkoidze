@@ -1,6 +1,6 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using Forum.Application.Exceptions;
+using Forum.Application.Infrastructure.Exceptions;
 using Forum.Application.Users.Models.UpdateModel;
 using Forum.Application.Users.UserServices;
 using Microsoft.AspNetCore.Authorization;

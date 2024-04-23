@@ -1,6 +1,6 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using Forum.Application.Topics;
+using Forum.Application.Topics.Interfaces;
 using Forum.Persistence.Context;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,7 +38,7 @@ namespace Forum.Worker.BackgroundWorkers
                         using (var scope = _serviceProvider.CreateScope())
                         {
                             var now = DateTime.UtcNow;
-                            var topic = scope.ServiceProvider.GetRequiredService<ITopicRepository>();
+                            var topic = scope.ServiceProvider.GetRequiredService<IUserTopicRepository>();
                             if (now > _nextRun)
                             {
                                 _logger.LogInformation("TopicArchiveWorker running at: {Time}", DateTimeOffset.Now);

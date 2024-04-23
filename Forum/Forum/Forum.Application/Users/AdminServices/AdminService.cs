@@ -1,8 +1,8 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using Forum.Application.Exceptions;
-using Forum.Application.Helpers;
-using Forum.Application.Topics.ResponseModels;
+using Forum.Application.Infrastructure.Exceptions;
+using Forum.Application.Infrastructure.Helpers;
+using Forum.Application.Users.Interfaces;
 using Forum.Application.Users.Models.ResponseModels;
 using Forum.Domain.Users;
 using Mapster;
@@ -13,9 +13,9 @@ namespace Forum.Application.Users.AdminServices
     public class AdminService : IAdminService
     {
         private readonly UserManager<User> _userManager;
-        private readonly IUserRepository _userRepository;
+        private readonly IAdminRepository _userRepository;
 
-        public AdminService(UserManager<User> userManager, IUserRepository userRepository)
+        public AdminService(UserManager<User> userManager, IAdminRepository userRepository)
         {
             _userManager = userManager;
             _userRepository = userRepository;

@@ -4,6 +4,10 @@ namespace Forum.Application.Topics.ResponseModels
 {
     public class TopicsModel
     {
+        public TopicsModel()
+        {
+            
+        }
         public string Id { get; set; } = default!;
         public string UserName { get; set; } = default!;
         public DateTime CreatedAt { get; set; }

@@ -1,7 +1,8 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using Forum.Application.Exceptions;
-using Forum.Application.Helpers;
+using Forum.Application.Infrastructure.Exceptions;
+using Forum.Application.Infrastructure.Helpers;
+using Forum.Application.Topics.Interfaces;
 using Forum.Application.Topics.ResponseModels;
 using HashidsNet;
 using Mapster;
@@ -13,10 +14,10 @@ namespace Forum.Application.Topics.AdminServices
 {
     internal class AdminTopicService : IAdminTopicService
     {
-        private readonly ITopicRepository _topicRepository;
+        private readonly IAdminTopicRepository _topicRepository;
         private readonly IHashids _hashIds;
 
-        public AdminTopicService(ITopicRepository topicRepository, IHashids hashIds)
+        public AdminTopicService(IAdminTopicRepository topicRepository, IHashids hashIds)
         {
             _topicRepository = topicRepository;
             _hashIds = hashIds;
@@ -25,7 +26,7 @@ namespace Forum.Application.Topics.AdminServices
         public async Task<PagedList<AdminTopicDetailsModel>> GetAllTopicsAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             var result = await _topicRepository
-                .GetAllTopicsForAdminAsync(pageNumber, pageSize, cancellationToken)
+                .GetAllTopicAsync(pageNumber, pageSize, cancellationToken)
                 .ConfigureAwait(false);
 
             return result.Adapt<PagedList<AdminTopicDetailsModel>>();
@@ -58,6 +59,9 @@ namespace Forum.Application.Topics.AdminServices
             if (topic == null)
                 throw new TopicNotFoundException();
 
+            if(topic.Status == status)
+                throw new TopicNotFoundException();
+
             topic.Status = status;
 
             await _topicRepository.UpdateAsync(topic!, cancellationToken).ConfigureAwait(false);
@@ -65,9 +69,9 @@ namespace Forum.Application.Topics.AdminServices
         public async Task<PagedList<AdminImagedTopicModel>> GetTopicAsync(int pageNumber, int pageSize, string id, CancellationToken cancellationToken)
         {
             var topicId = DecodeAndValidateTopicId(id);
-            var topicForResponse = await _topicRepository.GetTopicForAdminAsync(pageNumber, pageSize, topicId, cancellationToken).ConfigureAwait(false);
+            var topicForResponse = await _topicRepository.GetTopicAsync(pageNumber, pageSize, topicId, cancellationToken).ConfigureAwait(false);
 
-            if (topicForResponse == null)
+            if (topicForResponse!.Item == null)
                 throw new TopicNotFoundException();
 
             var topicResponseModelForUser = topicForResponse!.Adapt<PagedList<AdminImagedTopicModel>>();

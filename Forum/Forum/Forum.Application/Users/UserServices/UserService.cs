@@ -1,9 +1,10 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using Forum.Application.Exceptions;
-using Forum.Application.Helpers;
+using Forum.Application.Infrastructure.Exceptions;
 using Forum.Application.Images;
+using Forum.Application.Infrastructure.Helpers;
 using Forum.Application.Topics.ResponseModels;
+using Forum.Application.Users.Interfaces;
 using Forum.Application.Users.Models.ResponseModels;
 using Forum.Application.Users.Models.UpdateModel;
 using Forum.Domain.Users;

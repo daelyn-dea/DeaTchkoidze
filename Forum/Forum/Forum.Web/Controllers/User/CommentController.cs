@@ -1,11 +1,7 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using System.Security.Claims;
 using Forum.Application.Comments.RequestModels;
-using Forum.Application.Comments.ResponseModels;
 using Forum.Application.Comments.Services;
-using Forum.Domain.Comments;
-using Forum.Domain.Topics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,8 +21,8 @@ namespace Forum.Web.Controllers.User
                 TopicId = topicId,
                 Title = body
             };
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            await _commentService.CreateCommentAsync(commentRequestModel, userId!, cancellationToken).ConfigureAwait(false);
+            var user = User;
+            await _commentService.CreateCommentAsync(commentRequestModel, user, cancellationToken).ConfigureAwait(false);
 
             return RedirectToAction("GetTopicById", "UserTopic", new { id = topicId });
         }
