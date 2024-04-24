@@ -1,0 +1,51 @@
+﻿@model Forum.Application.Users.Models.UpdateModel.UpdateModel
+
+@{
+	ViewData["Title"] = "Profile";
+}
+
+<h2>Update Profile Information</h2>
+
+<hr />
+<div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
+	<div class="d-flex flex-column align-items-center gap-2 card p-4 w-50">
+		<form asp-controller="User" asp-action="UpdateUserInfo" class="d-flex flex-column gap-4" method="post" enctype="multipart/form-data">
+			<div class="d-flex border border-1 flex-column justify-content-center align-items-center">
+				<div class="form-group">
+					<label class="control-label">Profile Picture</label>
+					<div class="input-group">
+						<input type="file" name="image" class="form-control" aria-label="Upload">
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Email" class="control-label"></label>
+				<input asp-for="Email" class="form-control" placeholder="Optional" />
+			</div>
+
+			<div class="form-group">
+				<label asp-for="UserName" class="control-label">Username</label>
+				<input asp-for="UserName" class="form-control" placeholder="Optional" />
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Name" class="control-label">Name</label>
+				<input asp-for="Name" class="form-control" placeholder="Optional" />
+			</div>
+
+			<div class="form-group">
+				<label asp-for="LastName" class="control-label">LastName</label>
+				<input asp-for="LastName" class="form-control" placeholder="Optional" />
+			</div>
+
+			<div class="form-group">
+				<label asp-for="BirthDate" class="control-label">BirthDate</label>
+				<input asp-for="BirthDate" class="form-control" placeholder="Optional" />
+			</div>
+
+			<button type="submit" class="btn btn-outline-success">Update</button>
+
+		</form>
+	</div>
+</div>
