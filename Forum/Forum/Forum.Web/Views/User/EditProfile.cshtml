@@ -4,7 +4,6 @@
 	ViewData["Title"] = "Profile";
 }
 
-<h2>Update Profile Information</h2>
 
 <hr />
 <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
@@ -49,3 +48,8 @@
 		</form>
 	</div>
 </div>
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_Validation.cshtml");
+	}
+}

@@ -11,7 +11,7 @@ using Asp.Versioning;
 using Forum.Application.Infrastructure.Helpers;
 using Forum.Application.Infrastructure.Exceptions;
 
-namespace Forum.API.Controllers.User
+namespace Forum.API.Controllers.V2.User
 {
     /// <summary>
     /// Controller for managing topics by users in the forum API.

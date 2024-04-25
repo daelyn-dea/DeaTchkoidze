@@ -3,7 +3,7 @@
 using FluentValidation;
 using Forum.Application.Topics.RequestModels;
 
-namespace Forum.API.Infrastructure.Validator
+namespace Forum.Application.Infrastructure.Validator
 {
     public class TopicRequestModelValidator : AbstractValidator<TopicRequestModel>
     {
@@ -12,7 +12,8 @@ namespace Forum.API.Infrastructure.Validator
 
             RuleFor(x => x.Title)
                 .NotEmpty()
-                .MaximumLength(1000);
+                .MaximumLength(1000)
+                .WithMessage("MAc Length is 1000");
         }
     }
 }

@@ -25,9 +25,15 @@ namespace Forum.Application.Topics.AdminServices
 
         public async Task<PagedList<AdminTopicDetailsModel>> GetAllTopicsAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
+            if (pageNumber <= 0)
+                throw new PageNotFoundException();
+
             var result = await _topicRepository
                 .GetAllTopicAsync(pageNumber, pageSize, cancellationToken)
                 .ConfigureAwait(false);
+
+            if (pageNumber > result.TotalPages)
+                throw new PageNotFoundException();
 
             return result.Adapt<PagedList<AdminTopicDetailsModel>>();
         }
@@ -68,15 +74,19 @@ namespace Forum.Application.Topics.AdminServices
         }
         public async Task<PagedList<AdminImagedTopicModel>> GetTopicAsync(int pageNumber, int pageSize, string id, CancellationToken cancellationToken)
         {
+            if (pageNumber <= 0)
+                throw new PageNotFoundException();
+
             var topicId = DecodeAndValidateTopicId(id);
             var topicForResponse = await _topicRepository.GetTopicAsync(pageNumber, pageSize, topicId, cancellationToken).ConfigureAwait(false);
 
             if (topicForResponse!.Item == null)
                 throw new TopicNotFoundException();
 
-            var topicResponseModelForUser = topicForResponse!.Adapt<PagedList<AdminImagedTopicModel>>();
+            if (pageNumber > topicForResponse.TotalPages)
+                throw new PageNotFoundException();
 
-            return topicResponseModelForUser;
+            return topicForResponse!.Adapt<PagedList<AdminImagedTopicModel>>();
         }
         private int DecodeAndValidateTopicId(string id)
         {

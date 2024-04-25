@@ -43,6 +43,10 @@
     flex-shrink: 0;
 }
 
+.topic-private-image {
+    width: 300px;
+}
+
 .topic-details {
     flex-grow: 1;
 }
@@ -142,6 +146,4 @@
 .deleted-comment {
     background-color: lightcyan;
 }
-
-
 

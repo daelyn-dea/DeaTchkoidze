@@ -7,8 +7,15 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Forum.API.Infrastructure.Examples
 {
+    /// <summary>
+    /// Provides examples for the <see cref="PagedList{ImagedTopicModel}"/> class.
+    /// </summary>
     public class PagedListImagedTopicModelExample : IExamplesProvider<PagedList<ImagedTopicModel>>
     {
+        /// <summary>
+        /// Gets an example of a <see cref="PagedList{ImagedTopicModel}"/>.
+        /// </summary>
+        /// <returns>An example <see cref="PagedList{ImagedTopicModel}"/>.</returns>
         public PagedList<ImagedTopicModel> GetExamples()
         {
             var imagedTopicModel = new ImagedTopicModel

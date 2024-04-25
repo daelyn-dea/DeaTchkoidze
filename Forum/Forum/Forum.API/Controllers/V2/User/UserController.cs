@@ -1,7 +1,6 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
 using Asp.Versioning;
-using Forum.Application.Infrastructure.Exceptions;
 using Forum.Application.Infrastructure.Helpers;
 using Forum.Application.Users.Models.ResponseModels;
 using Forum.Application.Users.Models.UpdateModel;
@@ -10,7 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.API.Controllers.User
+namespace Forum.API.Controllers.V2.User
 {
     /// <summary>
     /// Controller for managing user-related operations in the forum API.
@@ -19,7 +18,6 @@ namespace Forum.API.Controllers.User
     [ApiVersion("2.0")]
     [Route("api/v{version:apiVersion}/user")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Authorize(Roles = "User")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -35,28 +33,32 @@ namespace Forum.API.Controllers.User
         /// </summary>
         /// <param name="model">The model containing the updated user information.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        [HttpPatch]
+        [Authorize(Roles = "User")]
+        [HttpPut("profile-info")]
         public async Task UpdateUserInfo([FromForm] UpdateModel model, CancellationToken cancellationToken)
         {
-            if (!ModelState.IsValid)
-                throw new LoginFailedException();
-
-            var claims = User;
-            await _userService.UpdateUserInfo(model, claims, cancellationToken).ConfigureAwait(false);
+            await _userService.UpdateUserInfo(model, User, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Updates user password.
         /// </summary>
         /// <param name="model">The model containing the updated password information.</param>
-        [HttpPatch("password")]
+        [Authorize(Roles = "Admin, User")]
+        [HttpPut("password")]
         public async Task UpdatePassword(UpdatePassword model)
         {
-            if (!ModelState.IsValid)
-                throw new LoginFailedException();
+            await _userService.UpdatePassword(model, User).ConfigureAwait(false);
+        }
 
-            var claims = User;
-            await _userService.UpdatePassword(model, claims).ConfigureAwait(false);
+        /// <summary>
+        /// Delete user profile picture.
+        /// </summary>
+        [Authorize(Roles = "User")]
+        [HttpDelete("profile-picture")]
+        public async Task DeleteProfilePicture()
+        {
+            await _userService.DeleteProfilePicture(User).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace Forum.API.Controllers.User
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A paged list of users with topics.</returns>
         [AllowAnonymous]
-        [HttpGet("email")]
+        [HttpGet("by-email")]
         public async Task<PagedList<UserWithTopics>> GetUser(int pageNumber, int pageSize, string email, CancellationToken cancellationToken)
         {
             return await _userService.GetUserAsync(pageNumber, pageSize, email, cancellationToken).ConfigureAwait(false);
@@ -83,7 +85,7 @@ namespace Forum.API.Controllers.User
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A paged list of users with topics.</returns>
         [AllowAnonymous]
-        [HttpGet("username")]
+        [HttpGet("by-username")]
         public async Task<PagedList<UserWithTopics>> GetUserByName(int pageNumber, int pageSize, string userName, CancellationToken cancellationToken)
         {
             return await _userService.GetUserByNameAsync(pageNumber, pageSize, userName, cancellationToken).ConfigureAwait(false);
@@ -94,11 +96,11 @@ namespace Forum.API.Controllers.User
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The profile of the current user.</returns>
+        [Authorize(Roles = "Admin, User")]
         [HttpGet("profile")]
         public async Task<UserAccountModel> GetUserProfile(CancellationToken cancellationToken)
         {
-            var claims = User;
-            return await _userService.GetProfileOfUserAsync(claims, cancellationToken).ConfigureAwait(false);
+            return await _userService.GetProfileOfUserAsync(User, cancellationToken).ConfigureAwait(false);
         }
     }
 }

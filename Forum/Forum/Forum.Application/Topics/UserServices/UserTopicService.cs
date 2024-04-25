@@ -30,26 +30,41 @@ public class UserTopicService : IUserTopicService
 
     public async Task<PagedList<UserTopicDetailsModel>> GetAllTopicsAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
+        if (pageNumber <= 0)
+            throw new PageNotFoundException();
+
         var topics = await _topicRepository
             .GetAllTopicsAsync(pageNumber, pageSize, cancellationToken)
             .ConfigureAwait(false);
+
+        if (pageNumber > topics.TotalPages)
+            throw new PageNotFoundException();
 
         return topics.Adapt<PagedList<UserTopicDetailsModel>>();
     }
 
     public async Task<PagedList<ImagedTopicModel>> GetTopicAsync(int pageNumber, int pageSize, string id, CancellationToken cancellationToken)
     {
+        if (pageNumber <= 0)
+            throw new PageNotFoundException();
+
         var topicId = DecodeAndValidateTopicId(id);
 
         var topicForResponse = await _topicRepository
             .GetTopicAsync(pageNumber, pageSize, topicId, cancellationToken)
             .ConfigureAwait(false);
 
+        if (pageNumber > topicForResponse.TotalPages)
+            throw new PageNotFoundException();
+
         return topicForResponse!.Adapt<PagedList<ImagedTopicModel>>();
     }
 
     public async Task CreateTopicAsync(TopicRequestModel topic, string id, CancellationToken cancellationToken)
     {
+        if (topic.Title == null)
+            throw new NotAllowedWriteTopicException();
+
         var canAddPost = await _userService
             .AccessOfPostTopic(id, cancellationToken)
             .ConfigureAwait(false);

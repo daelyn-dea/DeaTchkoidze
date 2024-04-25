@@ -31,8 +31,7 @@ namespace Forum.Web.Controllers.User
         [AllowAnonymous]
         public async Task<IActionResult> GetUserProfile(CancellationToken cancellationToken)
         {
-            var claims = User;
-            var user = await _userService.GetProfileOfUserAsync(claims, cancellationToken).ConfigureAwait(false);
+            var user = await _userService.GetProfileOfUserAsync(User, cancellationToken).ConfigureAwait(false);
             return View(user);
         }
 
@@ -46,11 +45,7 @@ namespace Forum.Web.Controllers.User
         [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> EditPassword(UpdatePassword model)
         {
-            if (!ModelState.IsValid)
-                throw new LoginFailedException();
-
-            var claims = User;
-            await _userService.UpdatePassword(model, claims).ConfigureAwait(false);
+            await _userService.UpdatePassword(model, User).ConfigureAwait(false);
 
             return RedirectToAction(nameof(GetUserProfile));
         }
@@ -65,11 +60,14 @@ namespace Forum.Web.Controllers.User
         [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateUserInfo([FromForm] UpdateModel model, CancellationToken cancellationToken)
         {
-            if (!ModelState.IsValid)
-                throw new LoginFailedException();
+            await _userService.UpdateUserInfo(model, User, cancellationToken).ConfigureAwait(false);
 
-            var claims = User;
-            await _userService.UpdateUserInfo(model, claims, cancellationToken).ConfigureAwait(false);
+            return RedirectToAction(nameof(GetUserProfile));
+        }
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> DeleteProfilePicture()
+        {
+            await _userService.DeleteProfilePicture(User).ConfigureAwait(false);
 
             return RedirectToAction(nameof(GetUserProfile));
         }

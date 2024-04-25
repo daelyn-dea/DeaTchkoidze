@@ -5,8 +5,15 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Forum.API.Infrastructure.Examples
 {
+    /// <summary>
+    /// Provides examples for the <see cref="UserAccountModel"/>.
+    /// </summary>
     public class UserAccountModelExample : IExamplesProvider<UserAccountModel>
     {
+        /// <summary>
+        /// Gets an example of a <see cref="UserAccountModel"/>.
+        /// </summary>
+        /// <returns>An example <see cref="UserAccountModel"/>.</returns>
         public UserAccountModel GetExamples()
         {
             return new UserAccountModel

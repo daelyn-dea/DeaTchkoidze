@@ -1,4 +1,5 @@
 ﻿@using Forum.Application.Infrastructure.Helpers;
+@using System.Security.Claims;
 
 @model PagedList<Forum.Application.Topics.ResponseModels.ImagedTopicModel>
 
@@ -10,9 +11,12 @@
 	<link rel="stylesheet" href="~/css/custom-styles.css" />
 </head>
 
+
+
+
 <div class="container mt-4 mb-4 d-flex justify-content-center">
 	<div class="topic-container">
-		<img src="@Model.Item.UserImageUrl" alt="User Image" class="user-image">
+		<img src="@Model.Item!.UserImageUrl" alt="User Image" class="user-image">
 		<div class="topic-details">
 			<div class="topic-username">@Model.Item.UserName</div>
 			<div class="topic-titles">@Model.Item.Title</div>
@@ -36,7 +40,7 @@
 								<a href="@Url.Action("GetUserByName", "User", new { userName = comment.UserName })" class="comment-username" style="color: black; font-weight: bold;">@comment.UserName</a>
 							<div class="comment-title">@comment.Title</div>
 							<div class="comment-created">Created at: @comment.CreatedAt</div>
-								@if (User.Identity.IsAuthenticated && (User.Identity.Name == comment.UserName || Model.Item.UserName == User.Identity.Name))
+								@if (User.Identity!.IsAuthenticated && (User.Identity.Name == comment.UserName || Model.Item.UserName == User.Identity.Name))
 							{
 									<a href="@Url.Action("Delete", "Comment", new { commentId = comment.Id, topicId = Model.Item.Id})" style="color: black; font-weight: bold;">Delete</a>
 							}
@@ -45,11 +49,11 @@
 				}
 				}
 			</div>
-			@if (User.Identity.IsAuthenticated && User.IsInRole("User"))
+			@if (User.Identity!.IsAuthenticated && User.IsInRole("User"))
 			{
 				<form class="d-flex flex-column gap-4" asp-action="Create" asp-controller="Comment">
 					<input hidden name="topicId" value="@Model.Item.Id" />
-					<textarea name="body" id="commentBody" class="form-control w-100 bg-Light text-Black border-1 rounded-2" rows="4" placeholder="Write comment..."></textarea>
+					<textarea name="body" id="commentBody" class="form-control w-100 bg-Light text-Black border-1 rounded-10" rows="2" placeholder="Comments as @User.FindFirst(ClaimTypes.Name)?.Value"></textarea>
 
 					@if (ViewBag.Error != null)
 					{
@@ -57,8 +61,7 @@
 							<p class="text-black m-0">@ViewBag.Error</p>
 						</div>
 					}
-
-					<button type="submit" class="btn btn-light">Add Comment</button>
+					<button type="submit" class="btn btn-primary btn-lg">Add Comment</button>
 				</form>
 			}
 		</div>
@@ -67,10 +70,6 @@
 
 <div class="container mt-4 mb-4 d-flex justify-content-center">
 	<div class="pagination">
-		<div class="pagination-info">
-			<span>Page @Model.CurrentPage of @Model.TotalPages</span>
-		</div>
-
 		<div class="pagination-links">
 			@if (Model.HasPreviousPage)
 			{
@@ -108,3 +107,8 @@
 		</div>
 	</div>
 </div>
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_Validation.cshtml");
+	}
+}

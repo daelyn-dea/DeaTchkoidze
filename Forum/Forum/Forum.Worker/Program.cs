@@ -36,8 +36,8 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
         {
             services.AddDbContext<ForumContext>(options => options.UseSqlServer(hostContext.Configuration.GetConnectionString("DefaultConnection")),ServiceLifetime.Transient);
             services.AddSingleton(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-            services.AddSingleton<IUserRepository, UserRepository>();
-            services.AddSingleton<IUserTopicRepository, UserTopicRepository>();
+            services.AddSingleton<IWorkerUserRepository, WorkerUserRepository>();
+            services.AddSingleton<IWorkerTopicRepository, WorkerTopicRepository>();
             services.AddHostedService<TopicArchiveWorker>();
             services.AddHostedService<BlockRemovalWorker>();
         });

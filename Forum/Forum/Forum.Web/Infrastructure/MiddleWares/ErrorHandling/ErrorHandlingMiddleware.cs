@@ -1,8 +1,7 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
 using System.Text;
-using Forum.Web.Infrastructure.ApplicationError;
-using Microsoft.AspNetCore.Http;
+using Forum.Web.Infrastructure.MiddleWares.ErrorHandling;
 using Newtonsoft.Json;
 using Serilog;
 

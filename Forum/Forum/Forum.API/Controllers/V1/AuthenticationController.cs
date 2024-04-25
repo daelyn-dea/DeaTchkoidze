@@ -7,8 +7,11 @@ using Forum.Application.Authentications;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace Forum.API.Controllers.Version_2
+namespace Forum.API.Controllers.V1
 {
+    /// <summary>
+    /// Authentication Controller
+    /// </summary>
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]

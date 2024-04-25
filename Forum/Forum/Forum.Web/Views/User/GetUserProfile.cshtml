@@ -11,7 +11,12 @@
 		<div class="d-flex border border-1 flex-column justify-content-center align-items-center">
 			<img src="@Model.ImageUrl" alt="User Image" width="190" height="190">
 		</div>
-
+		@if (User.IsInRole("User"))
+		{
+			<div class="d-flex">
+				<a asp-action="DeleteProfilePicture" class="btn btn-outline-primary">Delete Profile Picture</a>
+			</div>
+		}
 		<div class="text-dark fw-bold">Username: @Model.UserName</div>
 		<div class="text-dark fw-bold">Email: @Model.Email</div>
 		<div class="text-dark fw-bold">Name: @Model.Name</div>
@@ -37,3 +42,8 @@
 		</div>
 	</div>
 </div>
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_Validation.cshtml");
+	}
+}

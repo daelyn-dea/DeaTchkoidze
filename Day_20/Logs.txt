@@ -29,3 +29,6 @@
    at Program.<Main>$(String[] args) in C:\Users\dchko\Desktop\visual studio\.NET\Day_20\Geography Now\Geography Now\Program.cs:line 6
 1/7/2024 9:39:19 PM: File hasn't right syntax: StackTrace:    at Geography_Now_.FileRead.fileReadMethod() in C:\Users\dchko\Desktop\visual studio\.NET\Day_20\Geography Now\Geography Now\FileRead.cs:line 44
    at Program.<Main>$(String[] args) in C:\Users\dchko\Desktop\visual studio\.NET\Day_20\Geography Now\Geography Now\Program.cs:line 6
+1/8/2024 6:07:33 PM: Exception of type 'System.Exception' was thrown.: StackTrace:    at Day_21.TestCreating.IsEveryAnswerDifferent() in C:\Users\dchko\Desktop\visual studio\.NET\Day_21\Day_21\Day_21\TestCreating.cs:line 50
+   at Day_21.WriteTestInFile.CallCreateTest() in C:\Users\dchko\Desktop\visual studio\.NET\Day_21\Day_21\Day_21\WriteTestInFile.cs:line 16
+   at Program.<Main>$(String[] args) in C:\Users\dchko\Desktop\visual studio\.NET\Day_21\Day_21\Day_21\Program.cs:line 13

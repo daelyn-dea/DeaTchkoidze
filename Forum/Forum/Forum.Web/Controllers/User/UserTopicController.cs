@@ -14,17 +14,17 @@ namespace Forum.Web.Controllers.User
 
         public UserTopicController(IUserTopicService topicService) => _topicService = topicService;
 
-        public async Task<IActionResult> GetTopicById(string id, CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 8)
+        public async Task<IActionResult> GetTopicById(string id, CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 5)
         {
             var topicResponse = await _topicService.GetTopicAsync(pageNumber, pageSize, id, cancellationToken).ConfigureAwait(false);
 
             return View(topicResponse);
         }
 
-        public async Task<IActionResult> GetTopics(CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 8)
+        public async Task<IActionResult> GetTopics(CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 5)
         {
             var topics = await _topicService.GetAllTopicsAsync(pageNumber, pageSize, cancellationToken).ConfigureAwait(false);
-            return View(topics );
+            return View(topics);
         }
 
         [Authorize(Roles = "User")]

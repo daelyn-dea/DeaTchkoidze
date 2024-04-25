@@ -1,14 +1,20 @@
 ﻿using Asp.Versioning;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
-
-//using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 
 namespace Forum.API.Infrastructure.Extensions
 {
+
+    /// <summary>
+    /// Extension methods for configuring Swagger/OpenAPI documentation.
+    /// </summary>
     public static class SwaggerConfigurationExtensions
     {
+        /// <summary>
+        /// Configures Swagger/OpenAPI documentation for the API.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/> to add Swagger services to.</param>
         public static void UseSwaggerConfiguration(this IServiceCollection services)
         {
 

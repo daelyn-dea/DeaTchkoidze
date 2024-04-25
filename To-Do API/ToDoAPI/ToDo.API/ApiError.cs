@@ -85,5 +85,12 @@ namespace ToDo.API
             Title = exception.Message;
             LogLevel = LogLevel.Information;
         }
+        private void OtherEcxeption(Exception exception)
+        {
+            Status = (int)HttpStatusCode.BadRequest;
+            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4";
+            Title = exception.Message;
+            LogLevel = LogLevel.Information;
+        }
     }
 }

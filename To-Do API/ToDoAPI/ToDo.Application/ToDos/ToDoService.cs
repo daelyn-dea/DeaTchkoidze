@@ -28,6 +28,14 @@ namespace ToDo.Application.ToDos
             if (!await _repository.ExistsByUserIsAndIs(ownerId, id, cancellationToken))
                 throw new ToDoItemNotFoundException();
 
+            var bla = await _repository.GetAsyncBeId(id, ownerId, cancellationToken);
+           // var blu = bla.Adapt<ToDoItem>();
+            var ku = bla.Subtasks;
+            if(ku != null)
+            foreach(var i in ku)
+            {
+                    i.IsDeleted = true;
+            }
             await _repository.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
 
         }

@@ -4,7 +4,7 @@ using System.Net;
 using Forum.Application.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.Web.Infrastructure.ApplicationError
+namespace Forum.Web.Infrastructure.MiddleWares.ErrorHandling
 {
     public class Error : ProblemDetails
     {
@@ -58,6 +58,14 @@ namespace Forum.Web.Infrastructure.ApplicationError
             Code = exception.Code;
             Status = (int)HttpStatusCode.BadRequest;
             Type = "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1";
+            Title = exception.Message;
+            LogLevel = LogLevel.Information;
+        }
+        private void HandleException(PageNotFoundException exception)
+        {
+            Code = exception.Code;
+            Status = (int)HttpStatusCode.BadRequest;
+            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4";
             Title = exception.Message;
             LogLevel = LogLevel.Information;
         }

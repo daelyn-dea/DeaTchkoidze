@@ -19,12 +19,12 @@ namespace ToDo.API.Controllers
     public class usersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IOptions<AuthenticationConfiguration> _authOptions;
+        private readonly IOptions<AuthenticationConfiguration> _authenticationOptions;
 
         public usersController(IUserService userService, IOptions<AuthenticationConfiguration> authOptions)
         {
             _userService = userService;
-            _authOptions = authOptions;
+			_authenticationOptions = authOptions;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace ToDo.API.Controllers
         {
             var result = await _userService.LoginAsync(user, cancellationToken);
 
-            return JwtTokenGenerator.GenerateToken(result.Username, result.Id.ToString(), _authOptions);
+            return JwtTokenGenerator.GenerateToken(result.Username, result.Id.ToString(), _authenticationOptions);
         }
 
         /// <summary>

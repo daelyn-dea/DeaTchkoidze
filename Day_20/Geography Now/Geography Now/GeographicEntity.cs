@@ -29,7 +29,7 @@
             Area = CalculateArea();
             Popualtion = CalculatePopulation();
         }
-        public string CapitalCity { get; set; }
+       // public string CapitalCity { get; set; }
        
         List<City> Cityes { get; set; }
         public decimal CalculateArea()

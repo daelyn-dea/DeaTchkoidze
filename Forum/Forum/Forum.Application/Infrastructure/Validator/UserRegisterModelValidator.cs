@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Forum.Application.Authentications.RequestModels;
 
-namespace Forum.API.Infrastructure.Validator
+namespace Forum.Application.Infrastructure.Validator
 {
     public class UserRegisterModelValidator : AbstractValidator<RequestRegisterModel>
 	{
@@ -30,14 +30,10 @@ namespace Forum.API.Infrastructure.Validator
 			RuleFor(model => model.BirthDate).LessThan(DateTime.Now)
 			   .WithMessage("invalid birthdate");
 
-			RuleFor(model => model.Password)
-				.NotEmpty().WithMessage("Password is required")
-				.MinimumLength(6).WithMessage("Password must be at least 6 characters long")
-				.MaximumLength(30).WithMessage("Password must be at most 30 characters long")
-				.Matches("[A-Z]+").WithMessage("Password must contain one or more capital letters.")
-				.Matches("[a-z]+").WithMessage("Password must contain one or more lowercase letters.")
-				.Matches(@"(\d)+").WithMessage("Password must contain one or more digits.")
-				.Matches(@"[""!@$%^&*(){}:;<>,.?/+\-_=|'[\]~\\]").WithMessage("Password must contain one or more special characters.");
+            RuleFor(model => model.Password)
+                .NotEmpty().WithMessage("Password is required")
+                .MinimumLength(6).WithMessage("Password must be at least 6 characters long")
+                .MaximumLength(30).WithMessage("Password must be at most 30 characters long");
 
             RuleFor(model => model.ConfirmPassword)
                  .NotEmpty().WithMessage("Confirm Password is required");

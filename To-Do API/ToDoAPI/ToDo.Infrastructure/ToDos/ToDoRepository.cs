@@ -5,6 +5,7 @@ using ToDo.Application.Exceptions;
 using ToDo.Application.Subtasks;
 using ToDo.Application.ToDos;
 using ToDo.Domain.BaseEntities;
+using ToDo.Domain.Subtasks;
 using ToDo.Domain.ToDos;
 using ToDo.Domain.Users;
 using ToDo.Persistence.Context;
@@ -29,8 +30,8 @@ namespace ToDo.Infrastructure.ToDos
 
         public async Task<List<ToDoItem>> GetAsyncByStatus(Status status, int userId, CancellationToken cancellationToken)
         {
-            return await _context.Set<ToDoItem>().Where(x => x.OwnerId == userId & x.Status == status).Include(x => x.Subtasks).ToListAsync(cancellationToken).ConfigureAwait(false);
-        }
+			 throw new Exception();
+		}
 
         public async Task<ToDoItem> GetAsync( int id, CancellationToken cancellationToken)
         {
@@ -47,7 +48,7 @@ namespace ToDo.Infrastructure.ToDos
                 }
                     toDoItem.Status = Status.Done;
                     await base.UpdateAsync(toDoItem, cancellationToken).ConfigureAwait(false);
-                    await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                  //  await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
             else
             {
@@ -96,16 +97,21 @@ namespace ToDo.Infrastructure.ToDos
         public new async Task DeleteAsync(int id, CancellationToken cancellationToken)
         {
             var entity = await GetAsync(id, cancellationToken).ConfigureAwait(false);
-            if (entity is null)
-            {
-                throw new ToDoItemNotFoundException();
-            }
-            entity.IsDeleted = true;
-            entity.Status = Status.Deleted;
-            entity.Subtasks?.ToList().ForEach(entity => entity.IsDeleted = true);
+           // if (entity is null)
+            //{
+              //  throw new ToDoItemNotFoundException();
+            //}
+            //entity.IsDeleted = true;
+            //entity.Status = Status.Deleted;
+            //entity.Subtasks?.ToList().ForEach(entity => entity.IsDeleted = true);
+            //_context.Entry(entity).State = EntityState.Detached;
+            //_context.Entry(entity).Property(nameof(entity.Status)).IsModified = true;
 
+
+            //base._context.CurrentCrudMethod = "Deleted";
             _dbSet.Update(entity);
 
+          //  await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
             await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 

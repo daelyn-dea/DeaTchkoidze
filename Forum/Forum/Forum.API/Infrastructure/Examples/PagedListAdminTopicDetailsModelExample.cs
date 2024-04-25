@@ -4,13 +4,19 @@ using Forum.Application.Infrastructure.Helpers;
 using Forum.Application.Topics.ResponseModels;
 using Forum.Domain.Topics;
 using Swashbuckle.AspNetCore.Filters;
-using static Forum.Application.Topics.ResponseModels.TopicResponseStateEnum;
 using static Forum.Domain.Topics.TopicStateEnum;
 
 namespace Forum.API.Infrastructure.Examples
 {
+    /// <summary>
+    /// Provides examples for the <see cref="PagedList{AdminTopicDetailsModel}"/> class.
+    /// </summary>
     public class PagedListAdminTopicDetailsModelExample : IExamplesProvider<PagedList<AdminTopicDetailsModel>>
     {
+        /// <summary>
+        /// Gets an example of a <see cref="PagedList{AdminTopicDetailsModel}"/>.
+        /// </summary>
+        /// <returns>An example <see cref="PagedList{AdminTopicDetailsModel}"/>.</returns>
         public PagedList<AdminTopicDetailsModel> GetExamples()
         {
             var topic1 = new AdminTopicDetailsModel
@@ -28,7 +34,7 @@ namespace Forum.API.Infrastructure.Examples
 
             var topic2 = new AdminTopicDetailsModel
             {
-                Id = "64df8bf3-8b0a-44d7-83b4-f42f203eb794",
+                Id = "334a47f5-8404-4965-9686-84fbdc63b20d",
                 UserName = "Liak12",
                 CreatedAt = DateTime.Now.AddDays(-20),
                 Title = "Sample Title 2",

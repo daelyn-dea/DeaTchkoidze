@@ -14,6 +14,9 @@ using Forum.Application.Users.AdminServices;
 using Forum.Application.Authentications;
 using Forum.Application.Infrastructure.Mappings;
 using Forum.Application.ServiceExtensions;
+using System.Reflection;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 
 namespace Forum.Application.Infrastructure.ServiceExtensions
 {
@@ -32,12 +35,15 @@ namespace Forum.Application.Infrastructure.ServiceExtensions
             services.AddScoped<IAdminTopicService, AdminTopicService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IAdminUserService, AdminUserService>();
 
             services.AddSingleton<IHashids>(_ => new Hashids
           (
              configuration.GetRequiredSection(nameof(HashIdConfiguration)).GetRequiredSection(nameof(HashIdConfiguration.Salt)).Value, 8
           ));
+
+            services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             services.RegisterMappings();
         }

@@ -13,6 +13,5 @@ namespace Forum.Application.Topics.Interfaces
         Task CreateTopicAsync(Topic topic, CancellationToken cancellationToken);
         Task<bool> ExistsTopic(int id, CancellationToken cancellationToken);
         Task<bool> CanDelete(int id, string userId, CancellationToken cancellationToken);
-        Task InactivateTopic(CancellationToken cancellationToken);
     }
 }

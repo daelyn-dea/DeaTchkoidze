@@ -3,7 +3,7 @@
 using FluentValidation;
 using Forum.Application.Users.Models.UpdateModel;
 
-namespace Forum.API.Infrastructure.Validator
+namespace Forum.Application.Infrastructure.Validator
 {
     public class UpdateModelValidator : AbstractValidator<UpdateModel>
     {

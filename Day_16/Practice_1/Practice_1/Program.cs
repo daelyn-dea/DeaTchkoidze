@@ -42,7 +42,7 @@ Book janeEyre = new Book("Charlotte Brontë", "Jane Eyre", 1847, "75-372-3421-2"
 
 List<Book> booksList = new List<Book> { greatGatsby, piligrimsProgress, clarissa, frankenstein };
 booksList.Add(janeEyre);
-
+booksList.RemoveAt(1);
 Console.WriteLine();
 Console.WriteLine("sorted by ISBN");
 ISBNComparer comparerISBN = new ISBNComparer();

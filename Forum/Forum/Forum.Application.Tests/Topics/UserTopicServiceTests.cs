@@ -1,5 +1,6 @@
 // Copyright (C) TBC Bank. All Rights Reserved.
 
+using FluentAssertions;
 using Forum.Application.Images;
 using Forum.Application.Infrastructure.Exceptions;
 using Forum.Application.Infrastructure.Helpers;
@@ -34,15 +35,78 @@ namespace Forum.Application.Tests.Topics
             _formFileMock = new Mock<IFormFile>();
         }
 
-        [Fact]
-        public async Task GetTopicAsync_WhenTopicExists_ShouldReturnedPagedListOfImagedTopicModel()
+        [Theory]
+        [InlineData(-1, 3, 10, "testdata")]
+        [InlineData(0, 3, 10, "testdata")]
+        public async Task GetTopicAsync_WhenPageNumberIsLessOrEqualZero_ShouldThrowPageNotFoundException(int pageNumber, int pageSize, int count, string id)
         {
             // Arrange
-            var pageNumber = 1;
-            var pageSize = 3;
-            var count = 0;
-            var id = "testdata";
+            var pagedTopic = new PagedList<Topic>(new Topic(), count, pageNumber, pageSize);
 
+            _hashIds.Setup(x => x.Decode("testdata")).Returns(new int[1] { 1 });
+
+            _topicRepository.Setup(x => x.GetTopicAsync(pageNumber, pageSize, 1, CancellationToken.None))
+                                .ReturnsAsync(pagedTopic);
+
+            var topicService = new UserTopicService(_topicRepository.Object, _hashIds.Object, _configuration.Object, _imagesRepository.Object, _userService.Object);
+
+            // Act
+            var task = async () => await topicService.GetTopicAsync(pageNumber, pageSize, id, CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
+            var exception = await Assert.ThrowsAsync<PageNotFoundException>(task).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineData(1, 3, 10, "testdata")]
+        [InlineData(2, 3, 10, "testdata")]
+        [InlineData(3, 3, 10, "testdata")]
+        public void GetTopicAsync_WhenPageNumberIsMoreThanZeroAndLessThanCount_ShouldNotThrowPageNotFoundException(int pageNumber, int pageSize, int count, string id)
+        {
+            // Arrange
+            var pagedTopic = new PagedList<Topic>(new Topic(), count, pageNumber, pageSize);
+
+            _hashIds.Setup(x => x.Decode("testdata")).Returns(new int[1] { 1 });
+
+            _topicRepository.Setup(x => x.GetTopicAsync(pageNumber, pageSize, 1, CancellationToken.None))
+                                .ReturnsAsync(pagedTopic);
+
+            var topicService = new UserTopicService(_topicRepository.Object, _hashIds.Object, _configuration.Object, _imagesRepository.Object, _userService.Object);
+
+            // Act
+            var task = () => topicService.GetTopicAsync(pageNumber, pageSize, id, CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
+            var exception = task.Should().NotThrow<PageNotFoundException>();
+
+        }
+
+        [Theory]
+        [InlineData(4, 3, 9, "testdata")]
+        public async Task GetTopicAsync_WhenPageNumberIsGreaterThanCount_ShouldThrowPageNotFoundException(int pageNumber, int pageSize, int count, string id)
+        {
+            // Arrange
+            var pagedTopic = new PagedList<Topic>(new Topic(), count, pageNumber, pageSize);
+
+            _hashIds.Setup(x => x.Decode("testdata")).Returns(new int[1] { 1 });
+
+            _topicRepository.Setup(x => x.GetTopicAsync(pageNumber, pageSize, 1, CancellationToken.None))
+                                .ReturnsAsync(pagedTopic);
+
+            var topicService = new UserTopicService(_topicRepository.Object, _hashIds.Object, _configuration.Object, _imagesRepository.Object, _userService.Object);
+
+            // Act
+            var task = async () => await topicService.GetTopicAsync(pageNumber, pageSize, id, CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
+            var exception = await Assert.ThrowsAsync<PageNotFoundException>(task).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineData(1,3,0, "testdata")]
+        public async Task GetTopicAsync_WhenTopicExists_ShouldReturnedPagedListOfImagedTopicModel(int pageNumber, int pageSize, int count, string id)
+        {
+            // Arrange
             var pagedTopic = new PagedList<Topic>(new Topic(), count, pageNumber, pageSize);
 
             _hashIds.Setup(x => x.Decode("testdata")).Returns(new int[1] {1});
@@ -61,15 +125,11 @@ namespace Forum.Application.Tests.Topics
             _topicRepository.Verify(x => x.GetTopicAsync(pageNumber, pageSize, 1, CancellationToken.None), Times.Once);
         }
 
-        [Fact]
-        public async Task GetTopicAsync_WhenTopicDoesNotExists_ShouldThrowTopicNotFoundException()
+        [Theory]
+        [InlineData(1, 3, 0, "negativeData")]
+        public async Task GetTopicAsync_WhenTopicDoesNotExists_ShouldThrowTopicNotFoundException(int pageNumber, int pageSize, int count, string id)
         {
             // Arrange
-            var pageNumber = 1;
-            var pageSize = 3;
-            var count = 0;
-            var id = "negativeData";
-
             var pagedTopic = new PagedList<Topic>(new Topic(), count, pageNumber, pageSize);
 
             _hashIds.Setup(x => x.Decode("testdata")).Returns(new int[1] { 1 });
@@ -86,15 +146,11 @@ namespace Forum.Application.Tests.Topics
             var exception = await Assert.ThrowsAsync<TopicNotFoundException>(task).ConfigureAwait(false);
         }
 
-        [Fact]
-        public async Task GetTopicAsync_WhenCountIs1AndPageSize1AndPageNumber1_ShouldReturn4PageAndHasNotNextPageAndPreviousPage()
+        [Theory]
+        [InlineData(1, 1, 1, "testdata")]
+        public async Task GetTopicAsync_WhenCountIs1AndPageSize1AndPageNumber1_ShouldReturn4PageAndHasNotNextPageAndPreviousPage(int pageNumber, int pageSize, int count, string id)
         {
             // Arrange
-            var pageNumber = 1;
-            var pageSize = 1;
-            var count = 1;
-            var id = "testdata";
-
             var pagedTopic = new PagedList<Topic>(new Topic(), count, pageNumber, pageSize);
 
             _hashIds.Setup(x => x.Decode("testdata")).Returns(new int[1] { 1 });
@@ -116,15 +172,11 @@ namespace Forum.Application.Tests.Topics
             Assert.False(result.HasNextPage);
         }
 
-        [Fact]
-        public async Task GetTopicAsync_WhenCountIs20AndPageSize5AndPageNumber1_ShouldReturn4PageAndHasNextPage()
+        [Theory]
+        [InlineData(1, 5, 20, "testdata")]
+        public async Task GetTopicAsync_WhenCountIs20AndPageSize5AndPageNumber1_ShouldReturn4PageAndHasNextPage(int pageNumber, int pageSize, int count, string id)
         {
             // Arrange
-            var pageNumber = 1;
-            var pageSize = 5;
-            var count = 20;
-            var id = "testdata";
-
             var pagedTopic = new PagedList<Topic>(new Topic(), count, pageNumber, pageSize);
 
             _hashIds.Setup(x => x.Decode("testdata")).Returns(new int[1] { 1 });
@@ -146,15 +198,11 @@ namespace Forum.Application.Tests.Topics
             Assert.True(result.HasNextPage);
         }
 
-        [Fact]
-        public async Task GetTopicAsync_WhenCountIs20AndPageSize5AndPageNumber2_ShouldReturn4PageAndHasNextPageAndPreviousPage()
+        [Theory]
+        [InlineData(2, 5, 20, "testdata")]
+        public async Task GetTopicAsync_WhenCountIs20AndPageSize5AndPageNumber2_ShouldReturn4PageAndHasNextPageAndPreviousPage(int pageNumber, int pageSize, int count, string id)
         {
             // Arrange
-            var pageNumber = 2;
-            var pageSize = 5;
-            var count = 20;
-            var id = "testdata";
-
             var pagedTopic = new PagedList<Topic>(new Topic(), count, pageNumber, pageSize);
 
             _hashIds.Setup(x => x.Decode("testdata")).Returns(new int[1] { 1 });
@@ -176,15 +224,11 @@ namespace Forum.Application.Tests.Topics
             Assert.True(result.HasNextPage);
         }
 
-        [Fact]
-        public async Task GetTopicAsync_WhenCountIs20AndPageSize5AndPageNumber4_ShouldReturn4PageAndHasNotNextPage()
+        [Theory]
+        [InlineData(4, 5, 20, "testdata")]
+        public async Task GetTopicAsync_WhenCountIs20AndPageSize5AndPageNumber4_ShouldReturn4PageAndHasNotNextPage(int pageNumber, int pageSize, int count, string id)
         {
             // Arrange
-            var pageNumber = 4;
-            var pageSize = 5;
-            var count = 20;
-            var id = "testdata";
-
             var pagedTopic = new PagedList<Topic>(new Topic(), count, pageNumber, pageSize);
 
             _hashIds.Setup(x => x.Decode("testdata")).Returns(new int[1] { 1 });
@@ -206,14 +250,11 @@ namespace Forum.Application.Tests.Topics
             Assert.False(result.HasNextPage);
         }
 
-        [Fact]
-        public async Task GetAllTopicsAsync_WhenCountIs22AndPageSize10AndTopicsExist_HaveToReturnPAgedListOdUserTopicDetailsModel()
+        [Theory]
+        [InlineData(1, 3, 2)]
+        public async Task GetAllTopicsAsync_WhenCountIs2AndPageSize3AndTopicsExist_HaveToReturnPAgedListOdUserTopicDetailsModel(int pageNumber, int pageSize, int count)
         {
             // Arrange
-            var pageNumber = 1;
-            var pageSize = 3;
-            var count = 2;
-
             var topicsFromRepository = new PagedList<TopicWithCommentCount>(new List<TopicWithCommentCount>()
             {
                 new TopicWithCommentCount()
@@ -257,14 +298,11 @@ namespace Forum.Application.Tests.Topics
             _topicRepository.Verify(x => x.GetAllTopicsAsync(pageNumber, pageSize, CancellationToken.None), Times.Once);
         }
 
-        [Fact]
-        public async Task GetAllTopicsAsync_WhenCountIs20AndPageSize5AndPageNumber4_ShouldReturn4PageAndHasNotNextPageHasPreviousPage()
+        [Theory]
+        [InlineData(4, 5, 20)]
+        public async Task GetAllTopicsAsync_WhenCountIs20AndPageSize5AndPageNumber4_ShouldReturn4PageAndHasNotNextPageHasPreviousPage(int pageNumber, int pageSize, int count)
         {
             // Arrange
-            var pageNumber = 4;
-            var pageSize = 5;
-            var count = 20;
-
             var topicsFromRepository = new PagedList<TopicWithCommentCount>(new List<TopicWithCommentCount>()
             {
                 new TopicWithCommentCount()
@@ -289,14 +327,89 @@ namespace Forum.Application.Tests.Topics
             Assert.False(result.HasNextPage);
         }
 
-        [Fact]
-        public async Task GetAllTopicsAsync_WhenCountIs20AndPageSize5AndPageNumber1_ShouldReturn4PageAndHasNotNextPageHasPreviousPage()
+        [Theory]
+        [InlineData(1, 3, 10, "testdata")]
+        [InlineData(2, 3, 10, "testdata")]
+        [InlineData(3, 3, 10, "testdata")]
+        public void GetAllTopicsAsync_WhenPageNumberIsMoreThanZeroAndLessThanCount_ShouldNotThrowPageNotFoundException(int pageNumber, int pageSize, int count, string id)
         {
             // Arrange
-            var pageNumber = 4;
-            var pageSize = 5;
-            var count = 20;
+            var topicsFromRepository = new PagedList<TopicWithCommentCount>(new List<TopicWithCommentCount>()
+            {
+                new TopicWithCommentCount()
+            }, count, pageNumber, pageSize);
 
+            _topicRepository.Setup(x => x.GetAllTopicsAsync(pageNumber, pageSize, CancellationToken.None))
+                                .ReturnsAsync(topicsFromRepository);
+
+            _hashIds.Setup(x => x.Encode(1)).Returns("7B0Yzw4J");
+
+            var topicService = new UserTopicService(_topicRepository.Object, _hashIds.Object, _configuration.Object, _imagesRepository.Object, _userService.Object);
+
+            // Act
+            var result = () => topicService.GetAllTopicsAsync(pageNumber, pageSize, CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
+            var exception = result.Should().NotThrow<PageNotFoundException>();
+
+        }
+
+        [Theory]
+        [InlineData(4, 3, 9, "testdata")]
+        public async Task GetAllTopicsAsync_WhenPageNumberIsGreaterThanCount_ShouldThrowPageNotFoundException(int pageNumber, int pageSize, int count, string id)
+        {
+            // Arrange
+            var topicsFromRepository = new PagedList<TopicWithCommentCount>(new List<TopicWithCommentCount>()
+            {
+                new TopicWithCommentCount()
+            }, count, pageNumber, pageSize);
+
+            _topicRepository.Setup(x => x.GetAllTopicsAsync(pageNumber, pageSize, CancellationToken.None))
+                                .ReturnsAsync(topicsFromRepository);
+
+            _hashIds.Setup(x => x.Encode(1)).Returns("7B0Yzw4J");
+
+            var topicService = new UserTopicService(_topicRepository.Object, _hashIds.Object, _configuration.Object, _imagesRepository.Object, _userService.Object);
+
+            // Act
+            var result = async () => await topicService.GetAllTopicsAsync(pageNumber, pageSize, CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
+            var exception = await Assert.ThrowsAsync<PageNotFoundException>(result).ConfigureAwait(false);
+
+        }
+
+        [Theory]
+        [InlineData(-1, 3, 10, "testdata")]
+        [InlineData(0, 3, 10, "testdata")]
+        public async Task GetAllTopicsAsync_WhenPageNumberIsLessOrEqualZero_ShouldThrowPageNotFoundException(int pageNumber, int pageSize, int count, string id)
+        {
+            // Arrange
+            var topicsFromRepository = new PagedList<TopicWithCommentCount>(new List<TopicWithCommentCount>()
+            {
+                new TopicWithCommentCount()
+            }, count, pageNumber, pageSize);
+
+            _topicRepository.Setup(x => x.GetAllTopicsAsync(pageNumber, pageSize, CancellationToken.None))
+                                .ReturnsAsync(topicsFromRepository);
+
+            _hashIds.Setup(x => x.Encode(1)).Returns("7B0Yzw4J");
+
+            var topicService = new UserTopicService(_topicRepository.Object, _hashIds.Object, _configuration.Object, _imagesRepository.Object, _userService.Object);
+
+            // Act
+            var result = async () => await topicService.GetAllTopicsAsync(pageNumber, pageSize, CancellationToken.None).ConfigureAwait(false);
+
+            // Assert
+            var exception = await Assert.ThrowsAsync<PageNotFoundException>(result).ConfigureAwait(false);
+
+        }
+
+        [Theory]
+        [InlineData(4, 5, 20)]
+        public async Task GetAllTopicsAsync_WhenCountIs20AndPageSize5AndPageNumber1_ShouldReturn4PageAndHasNotNextPageHasPreviousPage(int pageNumber, int pageSize, int count)
+        {
+            // Arrange
             var topicsFromRepository = new PagedList<TopicWithCommentCount>(new List<TopicWithCommentCount>()
             {
                 new TopicWithCommentCount()
@@ -321,14 +434,11 @@ namespace Forum.Application.Tests.Topics
             Assert.False(result.HasNextPage);
         }
 
-        [Fact]
-        public async Task GetAllTopicsAsync_WhenCountIs20AndPageSize5AndPageNumber2_ShouldReturn4PageAndHasNextPageHasPreviousPage()
+        [Theory]
+        [InlineData(2, 5, 20)]
+        public async Task GetAllTopicsAsync_WhenCountIs20AndPageSize5AndPageNumber2_ShouldReturn4PageAndHasNextPageHasPreviousPage(int pageNumber, int pageSize, int count)
         {
             // Arrange
-            var pageNumber = 2;
-            var pageSize = 5;
-            var count = 20;
-
             var topicsFromRepository = new PagedList<TopicWithCommentCount>(new List<TopicWithCommentCount>()
             {
                 new TopicWithCommentCount()
@@ -353,14 +463,11 @@ namespace Forum.Application.Tests.Topics
             Assert.True(result.HasNextPage);
         }
 
-        [Fact]
-        public async Task GetAllTopicsAsync_WhenCountIs1AndPageSize1AndPageNumber1_ShouldReturn4PageAndHasNotNextPageAndPreviousPage()
+        [Theory]
+        [InlineData(1, 1, 1)]
+        public async Task GetAllTopicsAsync_WhenCountIs1AndPageSize1AndPageNumber1_ShouldReturn4PageAndHasNotNextPageAndPreviousPage(int pageNumber, int pageSize, int count)
         {
             // Arrange
-            var pageNumber = 1;
-            var pageSize = 1;
-            var count = 1;
-
             var topicsFromRepository = new PagedList<TopicWithCommentCount>(new List<TopicWithCommentCount>()
             {
                 new TopicWithCommentCount()
@@ -465,6 +572,27 @@ namespace Forum.Application.Tests.Topics
             {
                 Image = null,
                 Title = "Something"
+            };
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NotAllowedWriteTopicException>(() =>
+                 topicService.CreateTopicAsync(topic, "Random", CancellationToken.None))
+                .ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task CreateTopicAsync_WhenTopicHasNotTitle_ShouldThrowNotAllowedWriteTopicException()
+        {
+            _userService
+                .Setup(x => x.AccessOfPostTopic(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            var topicService = new UserTopicService(_topicRepository.Object, _hashIds.Object, _configuration.Object, _imagesRepository.Object, _userService.Object);
+
+            var topic = new TopicRequestModel()
+            {
+                Image = null,
+                Title = null
             };
 
             // Act & Assert

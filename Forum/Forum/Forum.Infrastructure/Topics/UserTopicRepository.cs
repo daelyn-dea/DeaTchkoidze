@@ -21,27 +21,26 @@ namespace Forum.Infrastructure.Topics
         {
             var skipCount = (pageNumber - 1) * pageSize;
 
-            var topics = await _dbSet
+            var topicsQuery = _dbSet
                 .Where(x => x.State == TopicStateEnum.DbTopicState.Show)
                 .OrderByDescending(x => x.CreatedAt)
-                .Skip(skipCount)
-                .Take(pageSize)
                 .Select(topic => new TopicWithCommentCount
                 {
                     Topic = topic,
                     UserName = topic.User.UserName,
                     CommentCount = topic.Comments!.Count(c => !c.IsDeleted),
                     UserImageUrl = topic.User.ImageUrl!,
-                })
+                });
+
+            var topics = await topicsQuery
+                .Skip(skipCount)
+                .Take(pageSize)
                 .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-            var totalCount = await _dbSet
-                  .Where(x => x.State == TopicStateEnum.DbTopicState.Show)
-                  .CountAsync(cancellationToken).ConfigureAwait(false);
+            var totalCount = await topicsQuery
+                .CountAsync(cancellationToken).ConfigureAwait(false);
 
-            var pagedList = new PagedList<TopicWithCommentCount>(topics, totalCount, pageNumber, pageSize);
-
-            return pagedList;
+            return new PagedList<TopicWithCommentCount>(topics, totalCount, pageNumber, pageSize);
         }
 
         public async Task<PagedList<Topic>?> GetTopicAsync(int pageNumber, int pageSize, int id, CancellationToken cancellationToken)
@@ -94,26 +93,6 @@ namespace Forum.Infrastructure.Topics
         public async Task<bool> CanDelete(int id, string userId, CancellationToken cancellationToken)
         {
             return await _dbSet.AnyAsync(x => x.UserId == userId, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task InactivateTopic(CancellationToken cancellationToken)
-        {
-            var currentTime = DateTime.Now;
-            var twoDaysAgo = currentTime.AddDays(-2);
-
-            var inactiveTopics = _dbSet.AsNoTracking()
-                   .Where(t => t.CreatedAt < twoDaysAgo)
-                   .Where(t => !t.Comments!.Any() ||
-                   t.Comments!.Any() &&
-                   t.Comments!.OrderByDescending(c => c.CreatedAt)
-                   .First().CreatedAt < twoDaysAgo);
-
-            foreach (var topic in inactiveTopics)
-            {
-                topic.Status = TopicStatusEnum.TopicStatus.Inactive;
-            }
-
-            await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

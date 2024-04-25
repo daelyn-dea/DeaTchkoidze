@@ -23,8 +23,8 @@ namespace Forum.Worker.BackgroundWorkers
             _logger = logger;
             _serviceProvider = serviceProvider;
             _configuration = config;
-            var cronExpression = _configuration.GetValue<string>("CrontabConfig:CrontabExpressionOfTopicArchiveWorker");
-            _schedule = CrontabSchedule.Parse(cronExpression, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
+            var crontabExpression = _configuration.GetValue<string>("CrontabConfig:CrontabExpressionOfTopicArchiveWorker");
+            _schedule = CrontabSchedule.Parse(crontabExpression, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
             _nextRun = _schedule.GetNextOccurrence(DateTime.UtcNow);
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -35,10 +35,10 @@ namespace Forum.Worker.BackgroundWorkers
                 {
                     try
                     {
-                        using (var scope = _serviceProvider.CreateScope())
+                        using var scope = _serviceProvider.CreateScope();
                         {
                             var now = DateTime.UtcNow;
-                            var topic = scope.ServiceProvider.GetRequiredService<IUserTopicRepository>();
+                            var topic = scope.ServiceProvider.GetRequiredService<IWorkerTopicRepository>();
                             if (now > _nextRun)
                             {
                                 _logger.LogInformation("TopicArchiveWorker running at: {Time}", DateTimeOffset.Now);
@@ -50,7 +50,7 @@ namespace Forum.Worker.BackgroundWorkers
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex.Message);
+                        _logger.LogError(ex, ex.Message);
                     }
                 }
             }, stoppingToken).ConfigureAwait(false);

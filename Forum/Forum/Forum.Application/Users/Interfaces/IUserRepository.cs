@@ -10,6 +10,5 @@ namespace Forum.Application.Users.Interfaces
         Task<PagedList<UserTopicsSummary>> GetUserAsync(int pageNumber, int pageSize, string email, CancellationToken cancellationToken);
         Task<PagedList<UserTopicsSummary>> GetUserByNameAsync(int pageNumber, int pageSize, string userName, CancellationToken cancellationToken);
         Task<bool> AccessOfPostTopic(string userId, CancellationToken cancellationToken);
-        Task BlockExpiration(CancellationToken cancellationToken);
     }
 }

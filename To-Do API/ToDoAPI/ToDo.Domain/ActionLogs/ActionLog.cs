@@ -2,16 +2,20 @@
 {
     public class ActionLog
     {
-        //        o Date
-        //o ItemType
-        //o ItemId
-        //o OperationType(ENUM: Created, Updated, Deleted, MarkedAsDone, ...)
-        //o CollumnName
-
-        //o OldResult
-        //o NewResult
-        //o STATUS NOT REQUIRED FOR THIS TABLE
         public int Id { get; set; }
         public DateTime Date { get; set; }
+        public string ItemType { get; set; }
+        public int ItemId { get; set; }
+        public OperationTypes OperationType { get; set; }
+        public string ColumnName { get; set; }
+        public string OldValue { get; set; }
+        public string NewValue { get; set; }
+    }
+    public enum OperationTypes
+    {
+        Created,
+        Updated,
+        Deleted,
+        MarkedAsDone
     }
 }

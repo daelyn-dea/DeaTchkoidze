@@ -5,7 +5,7 @@ using Forum.Application.Authentications.RequestModels;
 using Forum.Application.Authentications;
 using Asp.Versioning;
 
-namespace Forum.API.Controllers
+namespace Forum.API.Controllers.V2
 {
     /// <summary>
     /// Controller responsible for handling user authentication.

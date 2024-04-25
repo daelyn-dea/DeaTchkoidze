@@ -21,24 +21,25 @@ namespace Forum.Infrastructure.Topics
         {
             var skipCount = (pageNumber - 1) * pageSize;
 
-            var topics = await _dbSet
-                .OrderBy(x => x.State)
-                .Skip(skipCount)
-                .Take(pageSize)
+            var topicsQuery = _dbSet
+                .OrderByDescending(x => x.CreatedAt)
                 .Select(topic => new TopicWithCommentCount
                 {
                     Topic = topic,
                     UserName = topic.User.UserName,
-                    CommentCount = topic.Comments!.Count()
-                })
+                    CommentCount = topic.Comments!.Count(c => !c.IsDeleted),
+                    UserImageUrl = topic.User.ImageUrl!,
+                });
+
+            var topics = await topicsQuery
+                .Skip(skipCount)
+                .Take(pageSize)
                 .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-            var totalCount = await _dbSet
-                  .CountAsync(cancellationToken).ConfigureAwait(false);
+            var totalCount = await topicsQuery
+                .CountAsync(cancellationToken).ConfigureAwait(false);
 
-            var pagedList = new PagedList<TopicWithCommentCount>(topics, totalCount, pageNumber, pageSize);
-
-            return pagedList;
+            return new PagedList<TopicWithCommentCount>(topics, totalCount, pageNumber, pageSize);
         }
         public async Task<PagedList<Topic>?> GetTopicAsync(int pageNumber, int pageSize, int id, CancellationToken cancellationToken)
         {

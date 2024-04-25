@@ -1,0 +1,104 @@
+﻿@using Forum.Application.Infrastructure.Helpers;
+
+@model PagedList<Forum.Application.Users.Models.ResponseModels.UserResponseModelForAdmin>
+
+@{
+	ViewData["Title"] = "GetAllUser";
+}
+
+<head>
+	<link rel="stylesheet" href="~/css/custom-styles.css" />
+</head>
+
+
+<div class="container mt-4 mb-4 d-flex justify-content-center">
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Created At</th>
+					<th>Name</th>
+					<th>Last Name</th>
+					<th>Birth Date</th>
+					<th>UserName</th>
+					<th>Email</th>
+					<th>Total Comments</th>
+					<th>Total Topics</th>
+					<th>Is Blocked</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Items)
+				{
+					<tr>
+						<td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+						<td>@Html.DisplayFor(modelItem => item.Name)</td>
+						<td>@Html.DisplayFor(modelItem => item.LastName)</td>
+						<td>@Html.DisplayFor(modelItem => item.BirthDate)</td>
+						<td><a href="@Url.Action("GetUserByName", "User", new { userName = item.UserName })" class="topic-username">@item.UserName</a></td>
+						<td>@Html.DisplayFor(modelItem => item.Email)</td>
+						<td>@Html.DisplayFor(modelItem => item.TotalComments)</td>
+						<td>@Html.DisplayFor(modelItem => item.TotalTopics)</td>
+						<td>@Html.DisplayFor(modelItem => item.IsBlocked)</td>
+						<td>
+							@if (!item.IsBlocked)
+							{
+								@Html.ActionLink("Block", "BlockUser", "AdminUser", new { userId = item.Id }, null)
+									}
+							else
+							{
+								@Html.ActionLink("UnBlock", "UnBlockUser", "AdminUser", new { userId = item.Id }, null)
+									}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="container mt-4 mb-4 d-flex justify-content-center">
+	<div class="pagination">
+		<div class="pagination-links">
+			@if (Model.HasPreviousPage)
+			{
+				<a href="@Url.Action("GetAll", new { pageNumber = 1, pageSize = Model.PageSize })" class="page-link">First</a>
+				<a href="@Url.Action("GetAll", new { pageNumber = Model.CurrentPage - 1, pageSize = Model.PageSize })" class="page-link">Previous</a>
+			}
+			else
+			{
+				<span class="disabled">First</span>
+				<span class="disabled">Previous</span>
+			}
+
+			@for (int i = 1; i <= Model.TotalPages; i++)
+			{
+				if (i == Model.CurrentPage)
+				{
+					<span class="current-page">@i</span>
+				}
+				else
+				{
+					<a href="@Url.Action("GetAll", new { pageNumber = i, pageSize = Model.PageSize })" class="page-link">@i</a>
+				}
+			}
+
+			@if (Model.HasNextPage)
+			{
+				<a href="@Url.Action("GetAll", new { pageNumber = Model.CurrentPage + 1, pageSize = Model.PageSize })" class="page-link">Next</a>
+				<a href="@Url.Action("GetAll", new { pageNumber = Model.TotalPages, pageSize = Model.PageSize })" class="page-link">Last</a>
+			}
+			else
+			{
+				<span class="disabled">Next</span>
+				<span class="disabled">Last</span>
+			}
+		</div>
+	</div>
+</div>
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_Validation.cshtml");
+	}
+}

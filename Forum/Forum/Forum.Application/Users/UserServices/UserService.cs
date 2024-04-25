@@ -30,6 +30,62 @@ namespace Forum.Application.Users.UserServices
             _userRepository = userRepository;
         }
 
+        public async Task<UserAccountModel> GetProfileOfUserAsync(ClaimsPrincipal claimsPrincipal, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.GetUserAsync(claimsPrincipal).ConfigureAwait(false);
+
+            if (user == null)
+                throw new UserNotFoundException();
+
+            var userAccountModel = user.Adapt<UserAccountModel>();
+
+            return userAccountModel;
+        }
+
+        public async Task<PagedList<UserWithTopics>> GetUserAsync(int pageNumber, int pageSize, string email, CancellationToken cancellationToken)
+        {
+            if (pageNumber <= 0)
+                throw new PageNotFoundException();
+
+            var userWithTopics = await _userRepository.GetUserAsync(pageNumber, pageSize, email, cancellationToken).ConfigureAwait(false);
+
+            if (pageNumber > userWithTopics.TotalPages)
+                throw new PageNotFoundException();
+
+            if (userWithTopics.Item == null)
+                throw new UserNotFoundException();
+
+            var userResponseModel = userWithTopics.Item.User.Adapt<UserWithTopics>();
+
+            userResponseModel.Topics = userWithTopics.Item.Topics.Adapt<List<UserTopicDetailsModel>>();
+
+            var pagedList = new PagedList<UserWithTopics>(userResponseModel, userWithTopics.TotalCount, pageNumber, pageSize);
+
+            return pagedList;
+        }
+
+        public async Task<PagedList<UserWithTopics>> GetUserByNameAsync(int pageNumber, int pageSize, string userName, CancellationToken cancellationToken)
+        {
+            if (pageNumber <= 0)
+                throw new PageNotFoundException();
+
+            var userWithTopics = await _userRepository.GetUserByNameAsync(pageNumber, pageSize, userName, cancellationToken).ConfigureAwait(false);
+
+            if (pageNumber > userWithTopics.TotalPages)
+                throw new PageNotFoundException();
+
+            if (userWithTopics.Item == null)
+                throw new UserNotFoundException();
+
+            var userResponseModel = userWithTopics.Item.User.Adapt<UserWithTopics>();
+
+            userResponseModel.Topics = userWithTopics.Item.Topics.Adapt<List<UserTopicDetailsModel>>();
+
+            var pagedList = new PagedList<UserWithTopics>(userResponseModel, userWithTopics.TotalCount, pageNumber, pageSize);
+
+            return pagedList;
+        }
+
         public async Task UpdatePassword(UpdatePassword password, ClaimsPrincipal claimsPrincipal)
         {
             var user = await _userManager.GetUserAsync(claimsPrincipal).ConfigureAwait(false);
@@ -52,49 +108,19 @@ namespace Forum.Application.Users.UserServices
             if (!result.Succeeded)
                 throw new FailedUpdateException();
         }
-
-        public async Task<UserAccountModel> GetProfileOfUserAsync(ClaimsPrincipal claimsPrincipal, CancellationToken cancellationToken)
+        public async Task DeleteProfilePicture(ClaimsPrincipal claimsPrincipal)
         {
-            var user = await _userManager.GetUserAsync(claimsPrincipal).ConfigureAwait(false);
+            var userBefore = await _userManager.GetUserAsync(claimsPrincipal).ConfigureAwait(false);
 
-            if (user == null)
+            if (userBefore == null)
                 throw new UserNotFoundException();
 
-            var userAccountModel = user.Adapt<UserAccountModel>();
+            userBefore.ImageUrl = "/UserImages/Default.jpg";
 
-            return userAccountModel;
-        }
+            var result = await _userManager.UpdateAsync(userBefore).ConfigureAwait(false);
 
-        public async Task<PagedList<UserWithTopics>> GetUserAsync(int pageNumber, int pageSize, string email, CancellationToken cancellationToken)
-        {
-            var userWithTopics = await _userRepository.GetUserAsync(pageNumber, pageSize, email, cancellationToken).ConfigureAwait(false);
-
-            if (userWithTopics.Item == null)
-                throw new UserNotFoundException();
-
-            var userResponseModel = userWithTopics.Item.User.Adapt<UserWithTopics>();
-
-            userResponseModel.Topics = userWithTopics.Item.Topics.Adapt<List<UserTopicDetailsModel>>();
-
-            var pagedList = new PagedList<UserWithTopics>(userResponseModel, userWithTopics.TotalCount, pageNumber, pageSize);
-
-            return pagedList;
-        }
-
-        public async Task<PagedList<UserWithTopics>> GetUserByNameAsync(int pageNumber, int pageSize, string userName, CancellationToken cancellationToken)
-        {
-            var userWithTopics = await _userRepository.GetUserByNameAsync(pageNumber, pageSize, userName, cancellationToken).ConfigureAwait(false);
-
-            if (userWithTopics.Item == null)
-                throw new UserNotFoundException();
-
-            var userResponseModel = userWithTopics.Item.User.Adapt<UserWithTopics>();
-
-            userResponseModel.Topics = userWithTopics.Item.Topics.Adapt<List<UserTopicDetailsModel>>();
-
-            var pagedList = new PagedList<UserWithTopics>(userResponseModel, userWithTopics.TotalCount, pageNumber, pageSize);
-
-            return pagedList;
+            if (!result.Succeeded)
+                throw new FailedUpdateException();
         }
 
         public async Task<bool> AccessOfPostTopic(string userId, CancellationToken cancellationToken)
@@ -144,5 +170,6 @@ namespace Forum.Application.Users.UserServices
                 userBefore.ImageUrl = $"{requestPath}/{imageName}";
             }
         }
+
     }
 }

@@ -6,8 +6,19 @@ using System.Text;
 
 namespace Forum.API.Infrastructure.Authentication
 {
+    /// <summary>
+    /// TokenGenerator
+    /// </summary>
     public class JwtTokenGenerator
     {
+        /// <summary>
+        /// Method For Generate Jwt Token
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="id"></param>
+        /// <param name="roles"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public static string GenerateToken(string userName, string id, IList<string> roles, IOptions<AuthenticationConfiguration> options)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

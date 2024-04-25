@@ -26,16 +26,17 @@ namespace Practice_01
             }
             return input;
         }
-        public static int RoundNearestMultiple(this int input)
+        public static int RoundNearestMultiple(this int input, int num)
         {
-            for (int i = input + 1; i < int.MaxValue; i++)
-            {
-                if (i % input == 0)
-                {
-                    return i;
-                }
-            }
-            return 0;
+           
+            //for (int i = input + 1; i < int.MaxValue; i++)
+            //{
+            //    if (i % input == 0)
+            //    {
+            //        return i;
+            //    }
+            //}
+            return num / input * num;
         }
     }
 }

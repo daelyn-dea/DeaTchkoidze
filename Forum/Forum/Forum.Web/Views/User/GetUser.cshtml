@@ -29,7 +29,7 @@
 									Comments:
 									@if (User.IsInRole("Admin"))
 									{
-										<a href="@Url.Action("GetTopicById", "ManageTopic", new { id = topic.Id })" class="topic-comment-count" style=" color: black; font-weight: bold;">@topic.CountOfComments</a>
+										<a href="@Url.Action("GetTopicById", "AdminTopic", new { id = topic.Id })" class="topic-comment-count" style=" color: black; font-weight: bold;">@topic.CountOfComments</a>
 									}
 									else
 									{
@@ -50,10 +50,6 @@
 </div>
 <div class="container mt-4 mb-4 d-flex justify-content-center">
 	<div class="pagination">
-		<div class="pagination-info">
-			<span>Page @Model.CurrentPage of @Model.TotalPages</span>
-		</div>
-
 		<div class="pagination-links">
 			@if (Model.HasPreviousPage)
 			{
@@ -91,3 +87,8 @@
 		</div>
 	</div>
 </div>
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_Validation.cshtml");
+	}
+}

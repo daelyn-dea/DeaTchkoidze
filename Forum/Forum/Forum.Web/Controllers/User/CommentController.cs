@@ -21,8 +21,7 @@ namespace Forum.Web.Controllers.User
                 TopicId = topicId,
                 Title = body
             };
-            var user = User;
-            await _commentService.CreateCommentAsync(commentRequestModel, user, cancellationToken).ConfigureAwait(false);
+            await _commentService.CreateCommentAsync(commentRequestModel, User, cancellationToken).ConfigureAwait(false);
 
             return RedirectToAction("GetTopicById", "UserTopic", new { id = topicId });
         }
@@ -30,12 +29,11 @@ namespace Forum.Web.Controllers.User
         [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> Delete(int commentId, string topicId, CancellationToken cancellationToken)
         {
-            var claims = User;
-            await _commentService.DeleteCommentAsync(commentId, claims, cancellationToken).ConfigureAwait(false);
+            await _commentService.DeleteCommentAsync(commentId, User, cancellationToken).ConfigureAwait(false);
             if (User.IsInRole("User"))
                 return RedirectToAction("GetTopicById", "UserTopic", new {id = topicId });
             else 
-                return RedirectToAction("GetTopicById", "ManageTopic", new { id = topicId });
+                return RedirectToAction("GetTopicById", "AdminTopic", new { id = topicId });
         }
     }
 }

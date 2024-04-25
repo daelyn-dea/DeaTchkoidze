@@ -22,6 +22,9 @@ namespace Forum.Application.Comments.Services
 
         public async Task CreateCommentAsync(CommentRequestModel commentRequestModel, ClaimsPrincipal user, CancellationToken cancellationToken)
         {
+            if (commentRequestModel.Title == null)
+                throw new NotAllowedWriteTopicException();
+
             var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
             {

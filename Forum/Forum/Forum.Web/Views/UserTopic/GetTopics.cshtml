@@ -14,11 +14,11 @@
 	<div class="table-responsive">
 		<table class="table">
 			<tbody>
-				@if (User.Identity.IsAuthenticated && User.IsInRole("User"))
+				@if (User.Identity!.IsAuthenticated && User.IsInRole("User"))
 				{
 					<form class="d-flex flex-column gap-4" asp-action="Create" asp-controller="UserTopic" enctype="multipart/form-data">
 						<input hidden name="Id" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
-						<textarea name="Body" class="form-control w-100 bg-Light text-Black border-1 rounded-2" rows="4" placeholder="Write Topic..."></textarea>
+						<textarea name="Body" class="form-control w-100 bg-Light text-Black border-1 rounded-20" rows="4" placeholder="What's on your mind, @User.FindFirst(ClaimTypes.Name)?.Value?"></textarea>
 						@if (ViewBag.Error != null)
 						{
 							<div class="p-2 bg-danger rounded-2">
@@ -29,11 +29,12 @@
 						<div>
 							<input type="file" name="image" class="form-control" accept="image/*" />
 						</div>
-
+						<div class ="d-flex flex-column gap-4">
 						<button type="submit" class="btn btn-primary btn-lg">Add Topic</button>
+						</div>
 					</form>
 				}
-				@foreach (var topic in Model.Items)
+				@foreach (var topic in Model.Items!)
 				{
 					<tr>
 						<td>
@@ -58,10 +59,6 @@
 </div>
 <div class="container mt-4 mb-4 d-flex justify-content-center">
 	<div class="pagination">
-		<div class="pagination-info">
-			<span>Page @Model.CurrentPage of @Model.TotalPages</span>
-		</div>
-
 		<div class="pagination-links">
 			@if (Model.HasPreviousPage)
 			{
@@ -99,4 +96,9 @@
 		</div>
 	</div>
 </div>
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_Validation.cshtml");
+	}
+}
 

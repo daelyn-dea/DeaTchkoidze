@@ -1,6 +1,5 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using System.Security.Claims;
 using Asp.Versioning;
 using Forum.Application.Comments.RequestModels;
 using Forum.Application.Comments.Services;
@@ -8,7 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.API.Controllers.User
+namespace Forum.API.Controllers.V2.User
 {
     /// <summary>
     /// Controller for handling comments in the forum API.
@@ -42,8 +41,7 @@ namespace Forum.API.Controllers.User
         [HttpPost]
         public async Task Create(CommentRequestModel commentRequestModel, CancellationToken cancellationToken)
         {
-            var user = User; ;
-            await _commentService.CreateCommentAsync(commentRequestModel, user, cancellationToken).ConfigureAwait(false);
+            await _commentService.CreateCommentAsync(commentRequestModel, User, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -55,8 +53,7 @@ namespace Forum.API.Controllers.User
         [HttpDelete]
         public async Task Delete(int id, CancellationToken cancellationToken)
         {
-            var user = User;
-            await _commentService.DeleteCommentAsync(id, user!, cancellationToken).ConfigureAwait(false);
+            await _commentService.DeleteCommentAsync(id, User, cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -3,7 +3,7 @@
 using FluentValidation;
 using Forum.Application.Comments.RequestModels;
 
-namespace Forum.API.Infrastructure.Validator
+namespace Forum.Application.Infrastructure.Validator
 {
     public class CommentRequestModelValidator : AbstractValidator<CommentRequestModel>
     {
@@ -12,7 +12,8 @@ namespace Forum.API.Infrastructure.Validator
 
             RuleFor(x => x.Title)
                 .NotEmpty()
-                .MaximumLength(4000);
+                .MaximumLength(400)
+                .WithMessage("Max Length is 400");
 
             RuleFor(x => x.TopicId)
            .NotEmpty();

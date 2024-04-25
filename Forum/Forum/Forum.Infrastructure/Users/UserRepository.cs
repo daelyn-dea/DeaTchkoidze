@@ -9,16 +9,13 @@ using Forum.Domain.Users;
 using Forum.Infrastructure.BaseRepository;
 using Forum.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Forum.Infrastructure.Users
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        private readonly IConfiguration _configuration;
-        public UserRepository(ForumContext context, IConfiguration configuration) : base(context)
+        public UserRepository(ForumContext context) : base(context)
         {
-            _configuration = configuration;
         }
 
         public async Task<PagedList<UserTopicsSummary>> GetUserAsync(int pageNumber, int pageSize, string email, CancellationToken cancellationToken)
@@ -100,23 +97,6 @@ namespace Forum.Infrastructure.Users
                     .ConfigureAwait(false);
 
             return commentCount > 3;
-        }
-        public async Task BlockExpiration(CancellationToken cancellationToken)
-        {
-            var expirationTime = _configuration.GetValue<int>("BlockedTime");
-            var currentTime = DateTime.Now;
-            var expirationThreshold = currentTime - TimeSpan.FromDays(expirationTime);
-
-            var expiredUsers = _dbSet.AsNoTracking()
-                .Where(x => x.IsBlocked && x.BlockedTime <= expirationThreshold);
-
-            foreach (var user in expiredUsers)
-            {
-                user.IsBlocked = false;
-                user.BlockedTime = null;
-            }
-
-            await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿// Copyright (C) TBC Bank. All Rights Reserved.
 
-using Forum.Application.Topics;
 using Forum.Application.Users.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,13 +17,13 @@ namespace Forum.Worker.BackgroundWorkers
         private readonly CrontabSchedule _schedule;
         private DateTime _nextRun;
 
-        public BlockRemovalWorker(IUserRepository userRepository,ILogger<BlockRemovalWorker> logger, IServiceProvider serviceProvider, IConfiguration config)
+        public BlockRemovalWorker(ILogger<BlockRemovalWorker> logger, IServiceProvider serviceProvider, IConfiguration config)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
             _configuration = config;
-            var cronExpression = _configuration.GetValue<string>("CrontabConfig:CrontabExpressionOfBlockRemovalWorker");
-            _schedule = CrontabSchedule.Parse(cronExpression, new CrontabSchedule.ParseOptions { IncludingSeconds = true });      
+            var crontabExpression = _configuration.GetValue<string>("CrontabConfig:CrontabExpressionOfBlockRemovalWorker");
+            _schedule = CrontabSchedule.Parse(crontabExpression, new CrontabSchedule.ParseOptions { IncludingSeconds = true });      
             _nextRun = _schedule.GetNextOccurrence(DateTime.UtcNow);
         }
 
@@ -36,10 +35,10 @@ namespace Forum.Worker.BackgroundWorkers
                 {
                     try
                     {
-                        using (var scope = _serviceProvider.CreateScope())
+                        using var scope = _serviceProvider.CreateScope();
                         {
                             var now = DateTime.UtcNow;
-                            var topic = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+                            var topic = scope.ServiceProvider.GetRequiredService<IWorkerUserRepository>();
                             if (now > _nextRun)
                             {
                                 _logger.LogInformation("BlockRemovalWorker started at time {Time}", DateTimeOffset.UtcNow);
@@ -51,7 +50,7 @@ namespace Forum.Worker.BackgroundWorkers
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex.Message);
+                        _logger.LogError(ex, ex.Message);
                     }
                 }
 

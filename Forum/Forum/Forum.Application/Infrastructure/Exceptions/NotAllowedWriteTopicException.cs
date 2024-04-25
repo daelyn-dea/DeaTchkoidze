@@ -6,7 +6,7 @@ namespace Forum.Application.Infrastructure.Exceptions
     {
         public readonly string Code = "NotAllowedWriteTopic";
 
-        public NotAllowedWriteTopicException(string message = "You are not allowed to write a comment") : base(message)
+        public NotAllowedWriteTopicException(string message = "Your message could not be saved. Try again later") : base(message)
         {
         }
     }

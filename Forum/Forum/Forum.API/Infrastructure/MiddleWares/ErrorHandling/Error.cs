@@ -6,15 +6,28 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.API.Infrastructure.MiddleWares.ErrorHandling
 {
+    /// <summary>
+    /// Represents an error response to be returned to the client.
+    /// </summary>
     public class Error : ProblemDetails
     {
+        /// <summary>
+        /// Unhandled eror code
+        /// </summary>
         public const string UnhandledErrorCode = "UnhandledError";
         private readonly HttpContext _httpContext;
         private readonly Exception _exception;
-
+        /// <summary>
+        /// The log level associated with the error.
+        /// </summary>
         public LogLevel LogLevel { get; set; }
+        /// <summary>
+        /// The code associated with the error.
+        /// </summary>
         public string Code { get; set; }
-
+        /// <summary>
+        /// Gets or sets the unique identifier for the error.
+        /// </summary>
         public string? TraceId
         {
             get
@@ -28,6 +41,11 @@ namespace Forum.API.Infrastructure.MiddleWares.ErrorHandling
             set => Extensions["TraceId"] = value;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Error"/> class.
+        /// </summary>
+        /// <param name="httpContext">The HTTP context associated with the error.</param>
+        /// <param name="exception">The exception that caused the error.</param>
         public Error(HttpContext httpContext, Exception exception)
         {
             _httpContext = httpContext;
@@ -69,6 +87,14 @@ namespace Forum.API.Infrastructure.MiddleWares.ErrorHandling
             LogLevel = LogLevel.Information;
         }
         private void HandleException(UserNotFoundException exception)
+        {
+            Code = exception.Code;
+            Status = (int)HttpStatusCode.BadRequest;
+            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4";
+            Title = exception.Message;
+            LogLevel = LogLevel.Information;
+        }     
+        private void HandleException(PageNotFoundException exception)
         {
             Code = exception.Code;
             Status = (int)HttpStatusCode.BadRequest;

@@ -1,11 +1,11 @@
-﻿@using Forum.Web.Models;
+﻿@using Forum.Web.Models
 @model ErrorViewModel
 @{
 	ViewData["Title"] = "Error";
 }
 
 <div class="text-center">
-
-	<h5 cstyle="color: blue;">@Model.ErrorMessage</h5>
 	<img src="~/images/errorImage.jpeg" width="600px" class="mt-5" />
+	<h5 style="color: Gray;">@Model.ErrorMessage</h5>
+	<a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Go to News Feed</a>
 </div>

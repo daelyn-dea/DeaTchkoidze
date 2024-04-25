@@ -15,5 +15,6 @@ namespace Forum.Application.Users.UserServices
         Task<PagedList<UserWithTopics>> GetUserByNameAsync(int pageNumber, int pageSize, string userName, CancellationToken cancellationToken);
         Task<UserAccountModel> GetProfileOfUserAsync(ClaimsPrincipal claimsPrincipal, CancellationToken cancellationToken);
         Task<bool> AccessOfPostTopic(string userId, CancellationToken cancellationToken);
+        Task DeleteProfilePicture(ClaimsPrincipal claimsPrincipal);
     }
 }
